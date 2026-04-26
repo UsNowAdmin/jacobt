@@ -61,6 +61,29 @@
     background-clip: text;
   }
   .score-bar { display: flex; gap: 20px; align-items: center; }
+  .btn-home {
+    font-family: 'Bangers', cursive;
+    font-size: 16px;
+    letter-spacing: 1px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-home:hover { color: var(--accent2); border-color: var(--accent2); }
+  .btn-quit {
+    font-family: 'Bangers', cursive; font-size: 18px; letter-spacing: 1px;
+    background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 6px 16px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-quit:hover { color: var(--wrong); border-color: var(--wrong); }
   .score-box {
     text-align: center;
     background: rgba(255,255,255,0.05);
@@ -268,16 +291,52 @@
     border-radius: 20px; padding: 4px 14px; font-size: 14px; font-weight: 900; color: var(--accent2); transition: all 0.2s;
   }
   .streak-badge.hot { background: rgba(255,107,53,0.2); border-color: var(--accent1); color: var(--accent1); animation: pulse 0.8s ease-in-out infinite; }
+  /* MODE 3 - SPEED TYPING */
+  .timer-ring-wrap { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
+  .timer-ring-wrap svg { transform: rotate(-90deg); }
+  .timer-ring-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 6; }
+  .timer-ring-fill { fill: none; stroke: var(--accent1); stroke-width: 6; stroke-linecap: round;
+    stroke-dasharray: 245; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear, stroke 0.5s; }
+  .timer-number { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Bangers', cursive; font-size: 28px; color: var(--accent1); letter-spacing: 1px; }
+  .type-flag-wrap { width: 200px; height: 135px; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); animation: flagIn 0.3s ease; }
+  .type-flag-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .type-input-wrap { width: 100%; max-width: 380px; position: relative; }
+  .type-input { width: 100%; font-family: 'Bangers', cursive; font-size: 26px; letter-spacing: 2px;
+    background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15);
+    color: var(--text); border-radius: 12px; padding: 14px 18px; outline: none;
+    text-align: center; transition: border-color 0.2s; -webkit-appearance: none; appearance: none; }
+  .type-input:focus { border-color: var(--accent3); }
+  .type-input.correct-flash { border-color: var(--correct); background: rgba(0,230,118,0.1); animation: correctPop 0.3s ease; }
+  .type-input.wrong-flash { border-color: var(--wrong); background: rgba(255,23,68,0.1); animation: shake 0.3s ease; }
+  .type-score-display { font-family: 'Bangers', cursive; font-size: 20px; letter-spacing: 2px; color: var(--accent2); text-align: center; }
+  .type-hint { font-size: 13px; color: var(--muted); text-align: center; min-height: 20px; }
+  .type-skip { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px;
+    background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--muted);
+    border-radius: 8px; padding: 6px 16px; cursor: pointer; transition: all 0.2s; }
+  .type-skip:hover { color: var(--accent2); border-color: var(--accent2); }
+  .mode-card.mode3::before { background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,45,122,0.15)); }
+
   @media (max-width: 500px) {
     .answers-grid.cols3 { grid-template-columns: 1fr 1fr; }
     .flag-grid.g3x3 { grid-template-columns: 1fr 1fr 1fr; max-width: 340px; }
-    .flag-img-wrap { width: 160px; height: 110px; }
+    .flag-img-wrap { width: 150px; height: 100px; }
+    .type-flag-wrap { width: 160px; height: 108px; }
+    .type-input { font-size: 22px; padding: 12px 14px; }
+    .timer-ring-wrap { width: 70px; height: 70px; }
+    .timer-number { font-size: 22px; }
+    .logo { font-size: 24px; }
+    .mode-card { min-width: 140px; padding: 18px 16px; }
+    .mode-emoji { font-size: 36px; }
+    header { padding: 12px 16px; }
   }
 </style>
 </head>
 <body>
 <div id="app">
   <header>
+    <a href="index.html" class="btn-home">🏠 Home</a>
     <div class="logo">🌍 FLAG MASTER</div>
     <div class="score-bar">
       <div class="score-box"><div class="label">Score</div><div class="value" id="hdr-score">0</div></div>
@@ -299,8 +358,11 @@
         <div class="mode-name">Name That Country</div>
         <div class="mode-desc">See a country name — pick the flag</div>
       </div>
-    </div>
-  </div>
+      <div class="mode-card mode3" onclick="selectMode(3)">
+        <span class="mode-emoji">⚡</span>
+        <div class="mode-name">Speed Typing</div>
+        <div class="mode-desc">See a flag — type the country. Race the clock!</div>
+      </div>
 
   <div id="setup" class="screen">
     <div class="setup-title" id="setup-title">NAME THAT FLAG</div>
@@ -319,12 +381,19 @@
         <button class="opt-btn" onclick="setOpt('grid','3x3',this)">3 × 3</button>
       </div>
     </div>
-    <div class="option-group">
-      <div class="option-label">Questions per round</div>
+    <div class="option-group" id="rounds-group">
       <div class="option-buttons">
         <button class="opt-btn" onclick="setOpt('rounds',10,this)">10</button>
         <button class="opt-btn selected" onclick="setOpt('rounds',20,this)">20</button>
         <button class="opt-btn" onclick="setOpt('rounds',40,this)">40</button>
+      </div>
+    </div>
+    <div class="option-group" id="time-limit-group" style="display:none">
+      <div class="option-label">Time limit</div>
+      <div class="option-buttons">
+        <button class="opt-btn" onclick="setOpt('time',30,this)">30s</button>
+        <button class="opt-btn selected" onclick="setOpt('time',60,this)">1 min</button>
+        <button class="opt-btn" onclick="setOpt('time',120,this)">2 min</button>
       </div>
     </div>
     <button class="btn-start" onclick="startGame()">START!</button>
@@ -333,7 +402,8 @@
 
   <div id="game" class="screen">
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-    <div style="display:flex;gap:16px;align-items:center;">
+    <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;width:100%;max-width:600px;">
+      <button class="btn-quit" onclick="if(state.timerInterval){clearInterval(state.timerInterval);state.timerInterval=null;}document.getElementById('streak-badge').style.display='';showScreen('menu')">✕ Quit</button>
       <div class="question-counter" id="q-counter">Question 1 of 20</div>
       <div class="streak-badge" id="streak-badge">🔥 0 streak</div>
     </div>
@@ -346,6 +416,24 @@
       <div class="question-text">Find the flag for:</div>
       <div class="country-name-display" id="country-name-display">Country</div>
       <div class="flag-grid" id="flag-grid"></div>
+    </div>
+    <div id="mode3-content" style="display:none;flex-direction:column;align-items:center;gap:16px;width:100%;max-width:420px;">
+      <div style="display:flex;align-items:center;gap:20px;justify-content:center;">
+        <div class="timer-ring-wrap">
+          <svg viewBox="0 0 82 82" width="82" height="82">
+            <circle class="timer-ring-bg" cx="41" cy="41" r="39"/>
+            <circle class="timer-ring-fill" id="timer-ring" cx="41" cy="41" r="39"/>
+          </svg>
+          <div class="timer-number" id="timer-display">60</div>
+        </div>
+        <div class="type-score-display">⚡ <span id="type-score">0</span> correct</div>
+      </div>
+      <div class="type-flag-wrap"><img id="type-flag-img" src="" alt="flag"/></div>
+      <div class="type-input-wrap">
+        <input class="type-input" id="type-input" type="text" placeholder="Type country name..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      </div>
+      <div class="type-hint" id="type-hint"></div>
+      <button class="type-skip" onclick="typeSkip()">Skip →</button>
     </div>
     <div class="feedback" id="feedback"></div>
   </div>
@@ -437,10 +525,12 @@ function flagUrl(code) {
 }
 
 let state = {
-  mode:1, answerCount:4, gridSize:'2x2', rounds:20,
+  mode:1, answerCount:4, gridSize:'2x2', rounds:20, timeLimit:60,
   currentQ:0, score:0, streak:0,
   highScore: parseInt(localStorage.getItem('flagmaster_hs')||'0'),
-  questions:[], answered:false
+  highScoreType: parseInt(localStorage.getItem('flagmaster_hs_type')||'0'),
+  questions:[], answered:false,
+  timerInterval:null, timeLeft:60, typeQueue:[]
 };
 
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
@@ -450,9 +540,12 @@ function updateHeader(){document.getElementById('hdr-score').textContent=state.s
 
 function selectMode(m){
   state.mode=m;
-  document.getElementById('setup-title').textContent=m===1?'NAME THAT FLAG':'NAME THAT COUNTRY';
+  document.getElementById('setup-title').textContent=m===1?'NAME THAT FLAG':m===2?'NAME THAT COUNTRY':'SPEED TYPING';
   document.getElementById('answer-count-group').style.display=m===1?'block':'none';
   document.getElementById('grid-size-group').style.display=m===2?'block':'none';
+  document.getElementById('time-limit-group').style.display=m===3?'block':'none';
+  const rg=document.getElementById('rounds-group');
+  if(rg) rg.style.display=m===3?'none':'block';
   showScreen('setup');
 }
 
@@ -460,6 +553,7 @@ function setOpt(type,val,btn){
   if(type==='count')state.answerCount=val;
   if(type==='grid')state.gridSize=val;
   if(type==='rounds')state.rounds=val;
+  if(type==='time')state.timeLimit=val;
   btn.closest('.option-buttons').querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
 }
@@ -475,11 +569,14 @@ function buildQuestions(){
 }
 
 function startGame(){
+  if(state.timerInterval){clearInterval(state.timerInterval);state.timerInterval=null;}
   state.score=0;state.streak=0;state.currentQ=0;state.answered=false;
   buildQuestions();updateHeader();showScreen('game');
   document.getElementById('mode1-content').style.display=state.mode===1?'flex':'none';
   document.getElementById('mode2-content').style.display=state.mode===2?'flex':'none';
-  renderQuestion();
+  document.getElementById('mode3-content').style.display=state.mode===3?'flex':'none';
+  if(state.mode===3) startTypeMode();
+  else renderQuestion();
 }
 
 function renderQuestion(){
@@ -587,6 +684,95 @@ function showResults(){
   document.getElementById('new-record').style.display=isNew?'block':'none';
   showScreen('results');
 }
+
+// ── MODE 3: SPEED TYPING ──────────────────────────────────
+function levenshtein(a,b){
+  const m=a.length,n=b.length,dp=[];
+  for(let i=0;i<=m;i++){dp[i]=[i];for(let j=1;j<=n;j++)dp[i][j]=i?0:j;}
+  for(let j=1;j<=n;j++)dp[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+function isCloseEnough(typed,correct){
+  const t=typed.toLowerCase().trim(),c=correct.toLowerCase().trim();
+  return t===c||levenshtein(t,c)<=1;
+}
+function startTypeMode(){
+  state.typeQueue=shuffle([...COUNTRIES]);
+  state.typeIdx=0;state.typeCorrect=0;state.timeLeft=state.timeLimit;
+  document.getElementById('type-score').textContent='0';
+  document.getElementById('q-counter').textContent='⚡ Speed Mode';
+  document.getElementById('streak-badge').style.display='none';
+  updateTimerRing();showTypeFlag();
+  const input=document.getElementById('type-input');
+  input.value='';input.className='type-input';input.disabled=false;
+  setTimeout(()=>input.focus(),100);
+  input.oninput=onTypeInput;
+  state.timerInterval=setInterval(()=>{
+    state.timeLeft--;updateTimerRing();
+    if(state.timeLeft<=0){clearInterval(state.timerInterval);state.timerInterval=null;endTypeMode();}
+  },1000);
+}
+function updateTimerRing(){
+  const ring=document.getElementById('timer-ring'),disp=document.getElementById('timer-display');
+  const pct=state.timeLeft/state.timeLimit,circ=245;
+  ring.style.strokeDashoffset=circ*(1-pct);
+  const col=pct>0.5?'var(--accent1)':pct>0.25?'var(--accent2)':'var(--wrong)';
+  ring.style.stroke=col;disp.style.color=col;disp.textContent=state.timeLeft;
+  const prog=document.getElementById('progress-fill');
+  prog.style.width=`${pct*100}%`;
+  prog.style.background=pct>0.5?'linear-gradient(90deg,var(--accent1),var(--accent2))':
+    pct>0.25?'linear-gradient(90deg,var(--accent2),var(--accent3))':'linear-gradient(90deg,var(--wrong),var(--accent4))';
+}
+function showTypeFlag(){
+  if(state.typeIdx>=state.typeQueue.length){state.typeQueue=shuffle([...COUNTRIES]);state.typeIdx=0;}
+  const c=state.typeQueue[state.typeIdx];state.currentTypeCountry=c;
+  const img=document.getElementById('type-flag-img');
+  img.src=`https://flagcdn.com/w160/${c.code}.png`;img.alt=c.name;
+  document.getElementById('type-hint').textContent='';
+  document.getElementById('type-hint').style.color='var(--muted)';
+  const input=document.getElementById('type-input');
+  input.value='';input.className='type-input';input.disabled=false;
+  setTimeout(()=>input.focus(),50);
+}
+function onTypeInput(){
+  const input=document.getElementById('type-input');
+  if(isCloseEnough(input.value,state.currentTypeCountry.name)){
+    state.typeCorrect++;
+    document.getElementById('type-score').textContent=state.typeCorrect;
+    input.className='type-input correct-flash';input.disabled=true;
+    document.getElementById('type-hint').textContent='✓ '+state.currentTypeCountry.name;
+    document.getElementById('type-hint').style.color='var(--correct)';
+    state.typeIdx++;
+    setTimeout(()=>showTypeFlag(),400);
+  }
+}
+function typeSkip(){
+  const input=document.getElementById('type-input');
+  input.className='type-input wrong-flash';
+  document.getElementById('type-hint').textContent='✗ '+state.currentTypeCountry.name;
+  document.getElementById('type-hint').style.color='var(--wrong)';
+  state.typeIdx++;
+  setTimeout(()=>showTypeFlag(),500);
+}
+function endTypeMode(){
+  document.getElementById('streak-badge').style.display='';
+  const isNew=state.typeCorrect>state.highScoreType;
+  if(isNew){state.highScoreType=state.typeCorrect;localStorage.setItem('flagmaster_hs_type',state.highScoreType);}
+  let msg='';
+  if(state.typeCorrect>=40)msg='🌟 Absolutely elite!';
+  else if(state.typeCorrect>=25)msg='🔥 World Geography Expert!';
+  else if(state.typeCorrect>=15)msg='💪 Strong speed round!';
+  else if(state.typeCorrect>=8)msg='📚 Getting faster!';
+  else msg='🌍 Keep practicing — speed comes!';
+  document.getElementById('result-title').textContent=state.typeCorrect>=20?'BLAZING!':state.typeCorrect>=10?'NICE RUN!':"TIME'S UP!";
+  document.getElementById('result-score').textContent=`${state.typeCorrect} flags`;
+  document.getElementById('result-sub').textContent=msg;
+  document.getElementById('new-record').style.display=isNew?'block':'none';
+  showScreen('results');
+}
+// ── END MODE 3 ────────────────────────────────────────────
 
 updateHeader();
 </script>
