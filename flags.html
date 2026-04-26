@@ -141,6 +141,12 @@
     transition: all 0.2s;
     text-align: center;
     min-width: 200px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: relative;
     overflow: hidden;
   }
@@ -337,7 +343,31 @@
     background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--muted);
     border-radius: 8px; padding: 6px 16px; cursor: pointer; transition: all 0.2s; }
   .type-skip:hover { color: var(--accent2); border-color: var(--accent2); }
+  .btn-enter {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--wrong);
+    border: none; cursor: pointer;
+    font-family: 'Bangers', cursive; font-size: 13px; letter-spacing: 0.5px;
+    color: #fff; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 16px rgba(255,23,68,0.5);
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .btn-enter:hover { transform: scale(1.1); box-shadow: 0 0 24px rgba(255,23,68,0.7); }
+  .btn-enter:active { transform: scale(0.95); }
+  .type-input-row { display: flex; gap: 10px; align-items: center; width: 100%; max-width: 380px; }
+  .type-input-row .type-input { flex: 1; }
   .mode-card.mode3::before { background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,45,122,0.15)); }
+  /* Setup screen back button — top right */
+  #setup { position: relative; }
+  .btn-back-top {
+    position: absolute; top: 16px; right: 20px;
+    background: transparent; border: 1px solid rgba(255,255,255,0.15);
+    color: var(--muted); font-family: 'Bangers', cursive; font-size: 16px;
+    letter-spacing: 1px; padding: 6px 14px; border-radius: 8px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-back-top:hover { color: var(--wrong); border-color: var(--wrong); }
 
   @media (max-width: 500px) {
     .answers-grid.cols3 { grid-template-columns: 1fr 1fr; }
@@ -383,16 +413,17 @@
         <div class="mode-name">Name That Country</div>
         <div class="mode-desc">See a country name — pick the flag</div>
       </div>
-      <div class="mode-card mode3" onclick="selectMode(3)">
+      <div class="mode-card mode3" onclick="selectMode(3)" style="min-width:200px;">
         <span class="mode-emoji">⚡</span>
         <div class="mode-name">Speed Typing</div>
-        <div class="mode-desc">See a flag — type the country. Race the clock!</div>
+        <div class="mode-desc">See a flag — type the country.<br>Race the clock!</div>
       </div>
     </div>
   </div>
 
   <!-- SETUP -->
   <div id="setup" class="screen">
+    <button class="btn-back-top" onclick="showScreen('menu')">✕ Back</button>
     <div class="setup-title" id="setup-title">NAME THAT FLAG</div>
     <div class="option-group" id="answer-count-group">
       <div class="option-label">How many choices?</div>
@@ -426,7 +457,6 @@
       </div>
     </div>
     <button class="btn-start" onclick="startGame()">START!</button>
-    <button class="btn-back" onclick="showScreen('menu')">← Back</button>
   </div>
 
   <!-- GAME -->
@@ -459,8 +489,9 @@
         <div class="type-score-display">⚡ <span id="type-score">0</span> correct</div>
       </div>
       <div class="type-flag-wrap"><img id="type-flag-img" src="" alt="flag"/></div>
-      <div class="type-input-wrap">
-        <input class="type-input" id="type-input" type="text" placeholder="Type country name..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <div class="type-input-row">
+        <input class="type-input" id="type-input" type="text" placeholder="Type country..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        <button class="btn-enter" onclick="typeEnter()">ENTER</button>
       </div>
       <div class="type-hint" id="type-hint"></div>
       <button class="type-skip" onclick="typeSkip()">Skip →</button>
@@ -740,6 +771,7 @@ function startTypeMode(){
   input.value='';input.className='type-input';input.disabled=false;
   setTimeout(()=>input.focus(),100);
   input.oninput=onTypeInput;
+  input.onkeydown=e=>{if(e.key==='Enter')typeEnter();};
   state.timerInterval=setInterval(()=>{
     state.timeLeft--;updateTimerRing();
     if(state.timeLeft<=0){clearInterval(state.timerInterval);state.timerInterval=null;endTypeMode();}
@@ -770,14 +802,32 @@ function showTypeFlag(){
 function onTypeInput(){
   const input=document.getElementById('type-input');
   if(isCloseEnough(input.value,state.currentTypeCountry.name)){
-    state.typeCorrect++;
-    document.getElementById('type-score').textContent=state.typeCorrect;
-    input.className='type-input correct-flash';input.disabled=true;
-    document.getElementById('type-hint').textContent='✓ '+state.currentTypeCountry.name;
-    document.getElementById('type-hint').style.color='var(--correct)';
-    state.typeIdx++;
-    setTimeout(()=>showTypeFlag(),400);
+    markTypeCorrect();
   }
+}
+function typeEnter(){
+  const input=document.getElementById('type-input');
+  if(!input.disabled && input.value.trim()){
+    if(isCloseEnough(input.value,state.currentTypeCountry.name)){
+      markTypeCorrect();
+    } else {
+      input.className='type-input wrong-flash';
+      document.getElementById('type-hint').textContent='✗ '+state.currentTypeCountry.name;
+      document.getElementById('type-hint').style.color='var(--wrong)';
+      state.typeIdx++;
+      setTimeout(()=>showTypeFlag(),600);
+    }
+  }
+}
+function markTypeCorrect(){
+  const input=document.getElementById('type-input');
+  state.typeCorrect++;
+  document.getElementById('type-score').textContent=state.typeCorrect;
+  input.className='type-input correct-flash';input.disabled=true;
+  document.getElementById('type-hint').textContent='✓ '+state.currentTypeCountry.name;
+  document.getElementById('type-hint').style.color='var(--correct)';
+  state.typeIdx++;
+  setTimeout(()=>showTypeFlag(),400);
 }
 function typeSkip(){
   const input=document.getElementById('type-input');
