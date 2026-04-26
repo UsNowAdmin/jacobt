@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jacobt.app</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --neon-green: #00ff88;
+    --neon-blue: #00cfff;
+    --neon-pink: #ff2d7a;
+    --neon-orange: #ff8c00;
+    --neon-purple: #b44fff;
+    --neon-yellow: #ffe500;
+    --text: #e0e0f0;
+    --muted: #444466;
+    --bullseye: #ff2d7a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  header {
+    width: 100%;
+    padding: 2rem 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .site-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--neon-green);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: #fff;
+    text-shadow:
+      0 0 20px rgba(0,255,136,0.4),
+      0 0 60px rgba(0,255,136,0.15);
+  }
+
+  h1 span {
+    color: var(--neon-green);
+  }
+
+  .tagline {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+  }
+
+  /* DARTBOARD */
+  .board-wrap {
+    position: relative;
+    width: min(520px, 90vw);
+    height: min(520px, 90vw);
+    margin: 2.5rem auto 1rem;
+  }
+
+  .board-wrap svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+  }
+
+  /* Wedge hover glow */
+  .wedge-group {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .wedge-group.active .wedge-outer {
+    filter: brightness(1.4) saturate(1.5);
+  }
+  .wedge-group.active .wedge-inner {
+    filter: brightness(1.5);
+  }
+  .wedge-group.coming-soon {
+    cursor: default;
+    opacity: 0.35;
+  }
+  .wedge-group.coming-soon:hover {
+    opacity: 0.5;
+  }
+  .wedge-group.active:hover .wedge-outer {
+    filter: brightness(1.7) saturate(2);
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: absolute;
+    bottom: -3.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10,10,20,0.95);
+    border: 1px solid var(--neon-green);
+    padding: 0.4rem 1.2rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--neon-green);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(0,255,136,0.3);
+  }
+
+  .tooltip.visible {
+    opacity: 1;
+  }
+
+  /* App grid below */
+  .apps-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin: 3.5rem 0 1rem;
+    text-align: center;
+  }
+
+  .apps-strip {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 1.5rem 3rem;
+    max-width: 600px;
+  }
+
+  .app-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .app-chip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .app-chip:hover::before { opacity: 0.08; }
+  .app-chip:hover { transform: translateY(-2px); }
+
+  .app-chip.live {
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    box-shadow: 0 0 12px rgba(0,255,136,0.2);
+  }
+  .app-chip.live::before { background: var(--neon-green); }
+  .app-chip.live:hover { box-shadow: 0 0 20px rgba(0,255,136,0.4); }
+
+  .app-chip.soon {
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+  .dot.pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+    50% { opacity: 0.6; box-shadow: 0 0 0 4px transparent; }
+  }
+
+  footer {
+    margin-top: auto;
+    padding: 1.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-align: center;
+    opacity: 0.5;
+  }
+
+  /* Fade in */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  header { animation: fadeUp 0.6s ease both; }
+  .board-wrap { animation: fadeUp 0.6s 0.15s ease both; }
+  .apps-label, .apps-strip { animation: fadeUp 0.6s 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="site-label">jacobt.app</div>
+  <h1>JACOB<span>T</span></h1>
+  <div class="tagline">Apps in progress &mdash; always more incoming</div>
+</header>
+
+<div class="board-wrap">
+  <svg id="dartboard" viewBox="-260 -260 520 520" xmlns="http://www.w3.org/2000/svg">
+    <!-- Built by JS below -->
+  </svg>
+  <div class="tooltip" id="tooltip"></div>
+</div>
+
+<div class="apps-label">// live apps</div>
+<div class="apps-strip" id="appStrip"></div>
+
+<footer>jacobt.app &mdash; always building</footer>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+const APPS = [
+  {
+    name: 'Flag Master',
+    desc: 'Name that flag',
+    href: 'flags2.0.html',
+    color: '#00ff88',    // neon green
+    live: true,
+    emoji: '🏳'
+  },
+  { name: 'Coming Soon', desc: '', href: null, color: '#444466', live: false },
+  { name: 'Coming Soon', desc: '', href: null, color: '#444466', live: false },
+  { name: 'Coming Soon', desc: '', href: null, color: '#444466', live: false },
+  { name: 'Coming Soon', desc: '', href: null, color: '#444466', live: false },
+  { name: 'Coming Soon', desc: '', href: null, color: '#444466', live: false },
+  { name: 'Coming Soon', desc: '', href: null, color: '#444466', live: false },
+  { name: 'Coming Soon', desc: '', href: null, color: '#444466', live: false },
+];
+
+const WEDGE_COUNT = APPS.length;
+const ANGLE = (2 * Math.PI) / WEDGE_COUNT;
+
+// Radii
+const R_BULL    = 18;
+const R_BULL2   = 36;
+const R_INNER   = 90;
+const R_MID     = 155;
+const R_OUTER   = 210;
+const R_LABEL   = 230;
+
+const svg = document.getElementById('dartboard');
+const tooltip = document.getElementById('tooltip');
+
+// ── HELPERS ──────────────────────────────────────────────
+function polar(r, theta) {
+  return [r * Math.cos(theta), r * Math.sin(theta)];
+}
+
+function arcPath(r1, r2, startAngle, endAngle) {
+  const [x1, y1] = polar(r1, startAngle);
+  const [x2, y2] = polar(r2, startAngle);
+  const [x3, y3] = polar(r2, endAngle);
+  const [x4, y4] = polar(r1, endAngle);
+  const large = endAngle - startAngle > Math.PI ? 1 : 0;
+  return `M ${x1} ${y1} L ${x2} ${y2} A ${r2} ${r2} 0 ${large} 1 ${x3} ${y3} L ${x4} ${y4} A ${r1} ${r1} 0 ${large} 0 ${x1} ${y1} Z`;
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// ── BOARD RINGS (background) ──────────────────────────────
+function addCircle(r, fill, stroke, sw) {
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('r', r);
+  c.setAttribute('fill', fill);
+  if (stroke) { c.setAttribute('stroke', stroke); c.setAttribute('stroke-width', sw||1); }
+  svg.appendChild(c);
+}
+
+// Outer ring bg
+addCircle(R_OUTER+12, '#0d0d18', '#1a1a2e', 1.5);
+// Grid lines ring
+addCircle(R_OUTER, '#101018', '#1e1e2e', 1);
+addCircle(R_MID,   '#0c0c16', '#1e1e2e', 0.8);
+addCircle(R_INNER, '#0a0a14', '#1e1e2e', 0.8);
+addCircle(R_BULL2, '#0a0a14', '#1e1e2e', 0.8);
+
+// ── WEDGES ────────────────────────────────────────────────
+const offset = -Math.PI / 2 - ANGLE / 2; // start at top
+
+APPS.forEach((app, i) => {
+  const start = offset + i * ANGLE;
+  const end   = start + ANGLE;
+  const mid   = (start + end) / 2;
+  const color = app.color;
+  const live  = app.live;
+
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.setAttribute('class', `wedge-group ${live ? 'active' : 'coming-soon'}`);
+
+  // Outer wedge
+  const outer = document.createElementNS('http://www.w3.org/2000/svg','path');
+  outer.setAttribute('d', arcPath(R_MID, R_OUTER, start, end));
+  outer.setAttribute('fill', live ? hexToRgba(color, 0.18) : 'rgba(30,30,50,0.4)');
+  outer.setAttribute('stroke', live ? hexToRgba(color, 0.5) : 'rgba(60,60,80,0.3)');
+  outer.setAttribute('stroke-width', '0.8');
+  outer.setAttribute('class', 'wedge-outer');
+
+  // Inner wedge
+  const inner = document.createElementNS('http://www.w3.org/2000/svg','path');
+  inner.setAttribute('d', arcPath(R_INNER, R_MID, start, end));
+  inner.setAttribute('fill', live ? hexToRgba(color, 0.28) : 'rgba(20,20,40,0.5)');
+  inner.setAttribute('stroke', live ? hexToRgba(color, 0.6) : 'rgba(50,50,70,0.3)');
+  inner.setAttribute('stroke-width', '0.8');
+  inner.setAttribute('class', 'wedge-inner');
+
+  // Glow line at edge (live only)
+  if (live) {
+    const glow = document.createElementNS('http://www.w3.org/2000/svg','path');
+    glow.setAttribute('d', arcPath(R_OUTER-2, R_OUTER, start+0.02, end-0.02));
+    glow.setAttribute('fill', color);
+    glow.setAttribute('opacity', '0.7');
+    g.appendChild(glow);
+  }
+
+  g.appendChild(outer);
+  g.appendChild(inner);
+
+  // Label on outer ring
+  const [lx, ly] = polar(R_LABEL, mid);
+  const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+  label.setAttribute('x', lx);
+  label.setAttribute('y', ly);
+  label.setAttribute('text-anchor','middle');
+  label.setAttribute('dominant-baseline','middle');
+  label.setAttribute('transform', `rotate(${(mid * 180/Math.PI) + 90}, ${lx}, ${ly})`);
+  label.setAttribute('font-family','Bebas Neue, sans-serif');
+  label.setAttribute('font-size', live ? '13' : '9');
+  label.setAttribute('fill', live ? color : '#333355');
+  label.setAttribute('letter-spacing','1');
+  label.textContent = live ? app.name.toUpperCase() : '·';
+  g.appendChild(label);
+
+  // Center icon / number for live wedges
+  if (live) {
+    const [cx2, cy2] = polar((R_INNER + R_MID) / 2, mid);
+    const icon = document.createElementNS('http://www.w3.org/2000/svg','text');
+    icon.setAttribute('x', cx2);
+    icon.setAttribute('y', cy2);
+    icon.setAttribute('text-anchor','middle');
+    icon.setAttribute('dominant-baseline','middle');
+    icon.setAttribute('font-size','22');
+    icon.textContent = app.emoji || '★';
+    g.appendChild(icon);
+  }
+
+  // Interactivity
+  if (live) {
+    g.addEventListener('mouseenter', () => {
+      tooltip.textContent = app.name + (app.desc ? ' — ' + app.desc : '');
+      tooltip.classList.add('visible');
+    });
+    g.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    });
+    g.addEventListener('click', () => {
+      if (app.href) window.location.href = app.href;
+    });
+  }
+
+  svg.appendChild(g);
+});
+
+// ── BULL RINGS ────────────────────────────────────────────
+// Double bull
+const bull2 = document.createElementNS('http://www.w3.org/2000/svg','circle');
+bull2.setAttribute('r', R_BULL2);
+bull2.setAttribute('fill', 'rgba(255,45,122,0.12)');
+bull2.setAttribute('stroke', 'rgba(255,45,122,0.5)');
+bull2.setAttribute('stroke-width','1');
+svg.appendChild(bull2);
+
+// Bullseye
+const bull = document.createElementNS('http://www.w3.org/2000/svg','circle');
+bull.setAttribute('r', R_BULL);
+bull.setAttribute('fill', '#ff2d7a');
+bull.setAttribute('filter','url(#bullGlow)');
+svg.appendChild(bull);
+
+// Bull text
+const bullText = document.createElementNS('http://www.w3.org/2000/svg','text');
+bullText.setAttribute('text-anchor','middle');
+bullText.setAttribute('dominant-baseline','middle');
+bullText.setAttribute('font-family','Bebas Neue, sans-serif');
+bullText.setAttribute('font-size','9');
+bullText.setAttribute('fill','#fff');
+bullText.setAttribute('letter-spacing','0.5');
+bullText.textContent = 'JT';
+svg.appendChild(bullText);
+
+// ── SVG DEFS / FILTERS ────────────────────────────────────
+const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+defs.innerHTML = `
+  <filter id="bullGlow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="6" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+`;
+svg.insertBefore(defs, svg.firstChild);
+
+// ── APP STRIP ─────────────────────────────────────────────
+const strip = document.getElementById('appStrip');
+APPS.filter(a => a.live).forEach(app => {
+  const chip = document.createElement(app.href ? 'a' : 'div');
+  chip.className = `app-chip ${app.live ? 'live' : 'soon'}`;
+  if (app.href) chip.href = app.href;
+  chip.innerHTML = `<span class="dot ${app.live ? 'pulse' : ''}"></span>${app.name}`;
+  strip.appendChild(chip);
+});
+</script>
+</body>
+</html>
