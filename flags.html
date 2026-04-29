@@ -690,6 +690,7 @@ function renderMode2(q){
     img.style.pointerEvents='none';
     btn.appendChild(img);
     btn.dataset.code=opt.code;
+    btn.dataset.name=opt.name;
     btn.onclick=()=>answer(btn,opt.name===q.correct.name,q.correct.code,'mode2',q);
     grid.appendChild(btn);
   });
@@ -715,7 +716,7 @@ function answer(btn,isCorrect,correctAnswer,mode,q){
       fb.textContent=`✗ It was: ${correctAnswer}`;
       allBtns.forEach(b=>{if(b.textContent===correctAnswer)b.classList.add('reveal');});
     } else {
-      fb.textContent=`✗ That was: ${q.correct.name}`;
+      fb.textContent=`✗ You picked: ${btn.dataset.name}`;
       allBtns.forEach(b=>{if(b.dataset.code===correctAnswer)b.classList.add('reveal');});
     }
     fb.className='feedback wrong-fb';
