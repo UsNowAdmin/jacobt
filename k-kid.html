@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karate Kid — Memorabilia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --neon-green:  #00ff88;
+    --neon-blue:   #00cfff;
+    --neon-pink:   #ff2d7a;
+    --neon-orange: #ff8c00;
+    --neon-purple: #b44fff;
+    --neon-yellow: #ffe500;
+    --text: #e0e0f0;
+    --muted: #444466;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanline */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 2.5rem 2rem 1.5rem;
+    text-align: center;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--neon-blue);
+    text-decoration: none;
+    text-transform: uppercase;
+    border: 1px solid rgba(0,207,255,0.3);
+    padding: 0.35rem 0.9rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .back-btn:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 14px rgba(0,207,255,0.3);
+    background: rgba(0,207,255,0.06);
+  }
+  .back-btn::before { content: '←'; }
+
+  .site-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--neon-blue);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 0.4rem;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 8vw, 5rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: #fff;
+    text-shadow:
+      0 0 20px rgba(0,207,255,0.5),
+      0 0 60px rgba(0,207,255,0.2);
+  }
+
+  h1 span { color: var(--neon-blue); }
+
+  .tagline {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* ── THUMBNAIL GRID ── */
+  .grid-section {
+    padding: 2rem 1.5rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+
+  .grid-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .thumb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.8rem;
+    align-items: start;
+  }
+
+  /* Each card */
+  .thumb-card {
+    position: relative;
+    cursor: pointer;
+    border-radius: 2px;
+    overflow: hidden;
+    transition: transform 0.25s ease;
+  }
+
+  .thumb-card:hover { transform: translateY(-4px) scale(1.015); }
+
+  /* Neon border via pseudo — each card gets its own color */
+  .thumb-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--card-color);
+    box-shadow:
+      0 0 12px var(--card-color),
+      inset 0 0 12px rgba(0,0,0,0.5);
+    z-index: 2;
+    pointer-events: none;
+    transition: box-shadow 0.25s;
+    border-radius: 2px;
+  }
+
+  .thumb-card:hover::before {
+    box-shadow:
+      0 0 28px var(--card-color),
+      0 0 60px rgba(0,0,0,0.2),
+      inset 0 0 8px rgba(0,0,0,0.3);
+  }
+
+  /* Corner accents */
+  .thumb-card::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-top: 1px solid var(--card-color);
+    border-left: 1px solid var(--card-color);
+    opacity: 0.4;
+    z-index: 3;
+    pointer-events: none;
+    border-radius: 1px;
+  }
+
+  .thumb-card img {
+    width: 100%;
+    height: auto;
+    max-height: 340px;
+    object-fit: contain;
+    display: block;
+    background: #080810;
+    filter: brightness(0.9) contrast(1.05);
+    transition: filter 0.25s;
+  }
+
+  .thumb-card:hover img {
+    filter: brightness(1) contrast(1.05);
+  }
+
+  /* Card footer bar */
+  .thumb-bar {
+    background: rgba(10,10,20,0.92);
+    padding: 0.55rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--card-color);
+    position: relative;
+    z-index: 2;
+  }
+
+  .thumb-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    color: var(--card-color);
+    text-shadow: 0 0 8px var(--card-color);
+  }
+
+  .thumb-hint {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── LIGHTBOX ── */
+  #lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,5,12,0.97);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  #lightbox.open { display: flex; }
+
+  .lb-toolbar {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .lb-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--neon-blue);
+    text-transform: uppercase;
+    border: 1px solid rgba(0,207,255,0.4);
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    background: none;
+    transition: all 0.2s;
+  }
+
+  .lb-back:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 14px rgba(0,207,255,0.35);
+    background: rgba(0,207,255,0.06);
+  }
+  .lb-back::before { content: '← '; }
+
+  .lb-counter {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+
+  .lb-nav {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .lb-arrow {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--text);
+    font-size: 1.2rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+  }
+
+  .lb-arrow:hover {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0,207,255,0.3);
+  }
+
+  /* Image container — pinch/zoom */
+  .lb-img-wrap {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    cursor: zoom-in;
+  }
+
+  .lb-img-wrap.zoomed { cursor: zoom-out; }
+
+  #lb-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.25s ease, opacity 0.2s;
+    transform-origin: center center;
+    user-select: none;
+    -webkit-user-drag: none;
+    border: 1px solid var(--lb-color, #00cfff);
+    box-shadow: 0 0 30px var(--lb-color, #00cfff), 0 0 80px rgba(0,0,0,0.8);
+  }
+
+  #lb-img.fade { opacity: 0; }
+
+  .lb-filename {
+    flex-shrink: 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 0.6rem;
+    text-align: center;
+  }
+
+  /* Zoom controls */
+  .zoom-controls {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .zoom-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.15s;
+  }
+
+  .zoom-btn:hover {
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+  }
+
+  .zoom-level {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    min-width: 3.5rem;
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .thumb-card {
+    animation: fadeUp 0.5s ease both;
+  }
+  .thumb-card:nth-child(1) { animation-delay: 0.05s; }
+  .thumb-card:nth-child(2) { animation-delay: 0.12s; }
+  .thumb-card:nth-child(3) { animation-delay: 0.19s; }
+  .thumb-card:nth-child(4) { animation-delay: 0.26s; }
+  .thumb-card:nth-child(5) { animation-delay: 0.33s; }
+  .thumb-card:nth-child(6) { animation-delay: 0.40s; }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back-btn" href="index.html">jacobt.app</a>
+  <div class="site-label">memorabilia vault</div>
+  <h1>KARATE<span>KID</span></h1>
+  <div class="tagline">Authenticated. Signed. Real.</div>
+</header>
+
+<section class="grid-section">
+  <div class="grid-label">// tap any image to inspect</div>
+  <div class="thumb-grid" id="thumbGrid"></div>
+</section>
+
+<footer>jacobt.app &mdash; always building</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div class="lb-toolbar">
+    <button class="lb-back" id="lbBack">BACK</button>
+    <span class="lb-counter" id="lbCounter"></span>
+    <div class="lb-nav">
+      <button class="lb-arrow" id="lbPrev">&#8249;</button>
+      <button class="lb-arrow" id="lbNext">&#8250;</button>
+    </div>
+  </div>
+  <div class="lb-img-wrap" id="lbImgWrap">
+    <img id="lb-img" src="" alt="">
+  </div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" id="zoomOut">− ZOOM</button>
+    <span class="zoom-level" id="zoomLevel">100%</span>
+    <button class="zoom-btn" id="zoomIn">+ ZOOM</button>
+    <button class="zoom-btn" id="zoomReset">RESET</button>
+  </div>
+  <div class="lb-filename" id="lbFilename"></div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+const IMAGES = [
+  { file: 'kk1.png', label: 'Exhibit 01', color: '#00cfff' },
+  { file: 'kk2.png', label: 'Exhibit 02', color: '#00ff88' },
+  { file: 'kk3.png', label: 'Exhibit 03', color: '#ff2d7a' },
+  { file: 'kk4.png', label: 'Exhibit 04', color: '#ff8c00' },
+  { file: 'kk5.png', label: 'Exhibit 05', color: '#b44fff' },
+  { file: 'kk6.png', label: 'Exhibit 06', color: '#ffe500' },
+];
+
+// ── BUILD GRID ──────────────────────────────────────────
+const grid = document.getElementById('thumbGrid');
+
+IMAGES.forEach((img, i) => {
+  const card = document.createElement('div');
+  card.className = 'thumb-card';
+  card.style.setProperty('--card-color', img.color);
+
+  card.innerHTML = `
+    <img src="${img.file}" alt="${img.label}" loading="lazy">
+    <div class="thumb-bar">
+      <span class="thumb-name">${img.label}</span>
+      <span class="thumb-hint">view ↗</span>
+    </div>
+  `;
+
+  card.addEventListener('click', () => openLightbox(i));
+  grid.appendChild(card);
+});
+
+// ── LIGHTBOX STATE ──────────────────────────────────────
+let currentIdx = 0;
+let zoomScale  = 1;
+const ZOOM_STEP = 0.4;
+const ZOOM_MAX  = 5;
+const ZOOM_MIN  = 1;
+
+const lightbox  = document.getElementById('lightbox');
+const lbImg     = document.getElementById('lb-img');
+const lbCounter = document.getElementById('lbCounter');
+const lbFilename= document.getElementById('lbFilename');
+const lbImgWrap = document.getElementById('lbImgWrap');
+
+function openLightbox(idx) {
+  currentIdx = idx;
+  zoomScale  = 1;
+  loadImage(idx);
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+  zoomScale = 1;
+  applyZoom();
+}
+
+function loadImage(idx) {
+  const data = IMAGES[idx];
+  lbImg.classList.add('fade');
+  setTimeout(() => {
+    lbImg.src = data.file;
+    lbImg.style.setProperty('--lb-color', data.color);
+    lbImg.style.borderColor = data.color;
+    lbImg.style.boxShadow = `0 0 30px ${data.color}, 0 0 80px rgba(0,0,0,0.8)`;
+    lbFilename.textContent = data.file + ' — ' + data.label;
+    lbCounter.textContent  = `${idx + 1} / ${IMAGES.length}`;
+    zoomScale = 1;
+    applyZoom();
+    lbImg.classList.remove('fade');
+  }, 160);
+}
+
+function navigate(dir) {
+  currentIdx = (currentIdx + dir + IMAGES.length) % IMAGES.length;
+  loadImage(currentIdx);
+}
+
+// Zoom
+function applyZoom() {
+  lbImg.style.transform = `scale(${zoomScale})`;
+  document.getElementById('zoomLevel').textContent = Math.round(zoomScale * 100) + '%';
+  lbImgWrap.classList.toggle('zoomed', zoomScale > 1);
+}
+
+document.getElementById('lbBack').addEventListener('click', closeLightbox);
+document.getElementById('lbPrev').addEventListener('click', () => navigate(-1));
+document.getElementById('lbNext').addEventListener('click', () => navigate(1));
+
+document.getElementById('zoomIn').addEventListener('click', () => {
+  zoomScale = Math.min(ZOOM_MAX, zoomScale + ZOOM_STEP);
+  applyZoom();
+});
+document.getElementById('zoomOut').addEventListener('click', () => {
+  zoomScale = Math.max(ZOOM_MIN, zoomScale - ZOOM_STEP);
+  applyZoom();
+});
+document.getElementById('zoomReset').addEventListener('click', () => {
+  zoomScale = 1;
+  applyZoom();
+});
+
+// Click image to toggle zoom
+lbImgWrap.addEventListener('click', (e) => {
+  if (e.target === lbImg || e.target === lbImgWrap) {
+    zoomScale = zoomScale === 1 ? 2.5 : 1;
+    applyZoom();
+  }
+});
+
+// Keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape')      closeLightbox();
+  if (e.key === 'ArrowLeft')   navigate(-1);
+  if (e.key === 'ArrowRight')  navigate(1);
+  if (e.key === '+' || e.key === '=') {
+    zoomScale = Math.min(ZOOM_MAX, zoomScale + ZOOM_STEP);
+    applyZoom();
+  }
+  if (e.key === '-') {
+    zoomScale = Math.max(ZOOM_MIN, zoomScale - ZOOM_STEP);
+    applyZoom();
+  }
+});
+
+// Scroll to zoom
+lbImgWrap.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP;
+  zoomScale = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, zoomScale + delta));
+  applyZoom();
+}, { passive: false });
+
+// Escape click on dark bg
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) closeLightbox();
+});
+</script>
+</body>
+</html>
