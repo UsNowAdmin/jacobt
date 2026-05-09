@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bball — jacobt.app</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #18182a;
+    --border: #1e1e2e;
+    --border2: #2a2a42;
+    --neon-green: #00ff88;
+    --neon-blue: #00cfff;
+    --neon-pink: #ff2d7a;
+    --neon-orange: #ff8c00;
+    --neon-yellow: #ffe500;
+    --text: #e0e0f0;
+    --muted: #444466;
+    --muted2: #666688;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 1.5rem 2rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-left { display: flex; flex-direction: column; gap: 0.1rem; }
+  .site-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--neon-green);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .site-label a { color: inherit; text-decoration: none; }
+  .site-label a:hover { opacity: 1; }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(0,255,136,0.3);
+  }
+  h1 span { color: var(--neon-green); }
+  .tagline {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ── STAT BAR ── */
+  .stat-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .stat-box {
+    flex: 1;
+    min-width: 90px;
+    padding: 1rem 1.2rem;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .stat-box:last-child { border-right: none; }
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--neon-green);
+    text-shadow: 0 0 16px rgba(0,255,136,0.4);
+  }
+  .stat-val.blue { color: var(--neon-blue); text-shadow: 0 0 16px rgba(0,207,255,0.4); }
+  .stat-val.orange { color: var(--neon-orange); text-shadow: 0 0 16px rgba(255,140,0,0.4); }
+  .stat-val.pink { color: var(--neon-pink); text-shadow: 0 0 16px rgba(255,45,122,0.4); }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: calc(100vh - 160px);
+  }
+  @media (max-width: 700px) {
+    .main { grid-template-columns: 1fr; }
+  }
+
+  /* ── SIDEBAR: GAME LIST ── */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-header {
+    padding: 1rem 1.2rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    color: var(--muted2);
+    text-transform: uppercase;
+  }
+  .btn-add {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    background: var(--neon-green);
+    color: #000;
+    border: none;
+    padding: 0.3rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-add:hover { background: #00cc6e; transform: translateY(-1px); }
+
+  .game-list { flex: 1; overflow-y: auto; }
+  .game-item {
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .game-item:hover { background: var(--surface); }
+  .game-item.active { background: var(--surface2); border-left: 2px solid var(--neon-green); }
+  .game-date {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: var(--neon-green);
+  }
+  .game-info-text {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.04em;
+  }
+  .game-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    display: flex;
+    gap: 0.7rem;
+  }
+  .badge {
+    display: inline-block;
+    padding: 0.05rem 0.4rem;
+    font-size: 0.6rem;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.08em;
+    border: 1px solid;
+  }
+  .badge-hit { border-color: var(--neon-green); color: var(--neon-green); }
+  .badge-out { border-color: var(--muted); color: var(--muted); }
+  .badge-walk { border-color: var(--neon-blue); color: var(--neon-blue); }
+  .badge-hr { border-color: var(--neon-pink); color: var(--neon-pink); }
+
+  /* ── GAME DETAIL PANEL ── */
+  .detail-panel { display: flex; flex-direction: column; }
+  .detail-header {
+    padding: 1rem 1.5rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .detail-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+  }
+  .detail-header h2 span { color: var(--neon-green); }
+  .detail-actions { display: flex; gap: 0.5rem; align-items: center; }
+
+  .btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    background: transparent;
+    border: 1px solid var(--muted);
+    color: var(--muted2);
+    padding: 0.3rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { border-color: var(--text); color: var(--text); }
+  .btn.danger:hover { border-color: var(--neon-pink); color: var(--neon-pink); }
+  .btn.primary { border-color: var(--neon-green); color: var(--neon-green); }
+  .btn.primary:hover { background: rgba(0,255,136,0.08); }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 3rem;
+    text-align: center;
+  }
+  .empty-icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: var(--border2);
+    line-height: 1;
+  }
+  .empty-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── AT-BATS TABLE ── */
+  .ab-section { flex: 1; padding: 1.2rem 1.5rem; overflow-y: auto; }
+  .ab-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .ab-table { width: 100%; border-collapse: collapse; }
+  .ab-table th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: left;
+    padding: 0.4rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .ab-table td {
+    padding: 0.65rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    font-weight: 600;
+    vertical-align: top;
+  }
+  .ab-table tr:hover td { background: var(--surface); }
+  .ab-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .result-chip {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .rc-1B { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0,255,136,0.06); }
+  .rc-2B { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,207,255,0.06); }
+  .rc-3B { border-color: var(--neon-yellow); color: var(--neon-yellow); background: rgba(255,229,0,0.06); }
+  .rc-HR { border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,122,0.1); }
+  .rc-BB { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,207,255,0.06); }
+  .rc-OUT { border-color: var(--muted); color: var(--muted2); }
+  .after-text { font-size: 0.82rem; color: var(--muted2); font-weight: 600; }
+  .notes-text { font-size: 0.78rem; color: var(--muted); font-style: italic; font-family: 'Share Tech Mono', monospace; }
+  .del-ab { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 0.1rem 0.3rem; }
+  .del-ab:hover { color: var(--neon-pink); }
+
+  /* ── GAME STAT MINI-ROW ── */
+  .game-stats-row {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-wrap: wrap;
+  }
+  .mini-stat { display: flex; flex-direction: column; gap: 0.15rem; }
+  .mini-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .mini-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--neon-green);
+  }
+
+  /* ── MODALS ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+  }
+  .modal-header {
+    padding: 1rem 1.3rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.06em;
+    color: var(--neon-green);
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1.3rem;
+    line-height: 1;
+    padding: 0.2rem;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 1.3rem; }
+  .modal-footer {
+    padding: 0.8rem 1.3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .form-group { margin-bottom: 1rem; }
+  .form-label {
+    display: block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: var(--muted2);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.55rem 0.8rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 0 1px rgba(0,255,136,0.2);
+  }
+  .form-select option { background: var(--surface); }
+  .form-textarea { resize: vertical; min-height: 72px; }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+  }
+  .result-btn {
+    padding: 0.5rem 0.3rem;
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted2);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .result-btn:hover { border-color: var(--muted2); color: var(--text); }
+  .result-btn.sel-1B, .result-btn.sel-1B:hover { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0,255,136,0.08); }
+  .result-btn.sel-2B, .result-btn.sel-2B:hover { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,207,255,0.08); }
+  .result-btn.sel-3B, .result-btn.sel-3B:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); background: rgba(255,229,0,0.08); }
+  .result-btn.sel-HR, .result-btn.sel-HR:hover { border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,122,0.1); }
+  .result-btn.sel-BB, .result-btn.sel-BB:hover { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,207,255,0.08); }
+  .result-btn.sel-OUT, .result-btn.sel-OUT:hover { border-color: var(--muted2); color: var(--text); background: rgba(100,100,150,0.12); }
+
+  .btn-save {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    background: var(--neon-green);
+    color: #000;
+    border: none;
+    padding: 0.45rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-save:hover { background: #00cc6e; }
+  .btn-cancel {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    background: transparent;
+    color: var(--muted2);
+    border: 1px solid var(--border2);
+    padding: 0.45rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-cancel:hover { border-color: var(--muted2); color: var(--text); }
+
+  .hidden { display: none !important; }
+  .no-abs { padding: 2rem; text-align: center; color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em; }
+
+  /* ── CHART SECTION ── */
+  .chart-section {
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .chart-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .hit-breakdown {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .hb-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--border2);
+    min-width: 56px;
+  }
+  .hb-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  .hb-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .global-chart-wrap {
+    padding: 1rem 1.5rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .global-chart-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="site-label"><a href="index.html">← jacobt.app</a></div>
+    <h1>B<span>B</span>ALL</h1>
+    <div class="tagline">Jacob T — At-Bat Tracker</div>
+    <div style="margin-top:0.3rem;"><span id="syncStatus" style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.18em;color:#00ff88;">LOADING…</span></div>
+  </div>
+</header>
+
+<div class="stat-bar" id="globalStatBar">
+  <div class="stat-box">
+    <div class="stat-label">AVG</div>
+    <div class="stat-val" id="g-avg">---</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">OBP</div>
+    <div class="stat-val blue" id="g-obp">---</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Hits</div>
+    <div class="stat-val" id="g-hits">0</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">AB</div>
+    <div class="stat-val" id="g-ab">0</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">HR</div>
+    <div class="stat-val pink" id="g-hr">0</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">BB</div>
+    <div class="stat-val blue" id="g-bb">0</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Games</div>
+    <div class="stat-val orange" id="g-games">0</div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="section-title">// games</div>
+      <button class="btn-add" onclick="openNewGameModal()">+ New Game</button>
+    </div>
+    <div class="game-list" id="gameList">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- DETAIL -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">⚾</div>
+      <div class="empty-text">Select a game or add one</div>
+    </div>
+
+    <div id="gameDetail" class="hidden" style="display:flex;flex-direction:column;flex:1;">
+      <div class="detail-header">
+        <div>
+          <h2 id="detailDate">—</h2>
+          <div class="tagline" id="detailInfo" style="color:var(--muted2);font-size:0.85rem;"></div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn primary" onclick="openNewABModal()">+ At Bat</button>
+          <button class="btn danger" onclick="deleteCurrentGame()">Delete Game</button>
+        </div>
+      </div>
+      <div class="game-stats-row" id="gameStatsRow"></div>
+      <div class="ab-section">
+        <div id="abContent"></div>
+      </div>
+      <div class="chart-section" id="hitBreakdownSection">
+        <div class="chart-title">// hit breakdown this game</div>
+        <div class="hit-breakdown" id="hitBreakdown"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overall BA chart across games -->
+<div class="global-chart-wrap" id="globalChartWrap" style="display:none;">
+  <div class="global-chart-title">// batting average by game</div>
+  <div style="position:relative;width:100%;height:180px;">
+    <canvas id="baChart" role="img" aria-label="Batting average per game line chart"></canvas>
+  </div>
+</div>
+
+<!-- NEW GAME MODAL -->
+<div class="modal-overlay" id="gameModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Game</div>
+      <button class="modal-close" onclick="closeModal('gameModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-input" id="newGameDate">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Game Info (opponent, location, etc.)</label>
+        <input type="text" class="form-input" id="newGameInfo" placeholder="e.g. vs. Islip Tigers — Bay Shore Field">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('gameModal')">Cancel</button>
+      <button class="btn-save" onclick="saveNewGame()">Save Game</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW AT-BAT MODAL -->
+<div class="modal-overlay" id="abModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add At-Bat</div>
+      <button class="modal-close" onclick="closeModal('abModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Result</label>
+        <div class="result-grid">
+          <button class="result-btn" data-result="1B" onclick="selectResult(this)">Single</button>
+          <button class="result-btn" data-result="2B" onclick="selectResult(this)">Double</button>
+          <button class="result-btn" data-result="3B" onclick="selectResult(this)">Triple</button>
+          <button class="result-btn" data-result="HR" onclick="selectResult(this)">Home Run</button>
+          <button class="result-btn" data-result="BB" onclick="selectResult(this)">Walk</button>
+          <button class="result-btn" data-result="OUT" onclick="selectResult(this)">Out</button>
+        </div>
+        <input type="hidden" id="abResult">
+      </div>
+      <div class="form-group" id="afterBaseGroup">
+        <label class="form-label">What happened after? <span style="color:var(--muted);font-size:0.85em;">(optional)</span></label>
+        <select class="form-select" id="abAfter">
+          <option value="">— select —</option>
+          <option value="Scored">Scored</option>
+          <option value="RBI">RBI</option>
+          <option value="Stranded">Stranded on base</option>
+          <option value="Stolen base">Stolen base</option>
+          <option value="Picked off">Picked off</option>
+          <option value="Out at next">Out advancing</option>
+          <option value="N/A">N/A</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes <span style="color:var(--muted);font-size:0.85em;">(optional)</span></label>
+        <textarea class="form-textarea" id="abNotes" placeholder="e.g. Line drive to left, hit a low pitch..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('abModal')">Cancel</button>
+      <button class="btn-save" onclick="saveNewAB()">Save At-Bat</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const GS_URL = 'https://script.google.com/macros/s/AKfycbydpvX5Xetya5k31kTEHpUiVyXjl_jAhqMjU_5tpTm9IrdqMhwp5f8xxjk64o1iRoAnXw/exec';
+
+let db = JSON.parse(localStorage.getItem('bball_db') || '{"games":[]}');
+let currentGameId = null;
+let selectedResult = null;
+let baChartInstance = null;
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function save() { localStorage.setItem('bball_db', JSON.stringify(db)); }
+
+function setSyncStatus(s) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  const map = { idle: ['SYNCED', '#00ff88'], syncing: ['SYNCING…', '#ff8c00'], error: ['SYNC ERR', '#ff2d7a'] };
+  const [txt, col] = map[s] || map.idle;
+  el.textContent = txt;
+  el.style.color = col;
+}
+
+async function gsPost(payload) {
+  setSyncStatus('syncing');
+  try {
+    await fetch(GS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+    setSyncStatus('idle');
+  } catch(e) { setSyncStatus('error'); }
+}
+
+async function loadFromSheet() {
+  setSyncStatus('syncing');
+  try {
+    const res = await fetch(GS_URL);
+    const json = await res.json();
+    if (!json.ok || !json.data || !json.data.length) { setSyncStatus('idle'); return; }
+    const games = {};
+    for (const row of json.data) {
+      if (!row.game_id) continue;
+      if (!games[row.game_id]) {
+        games[row.game_id] = { id: row.game_id, date: row.game_date, info: row.game_info, atBats: [] };
+      }
+      if (row.ab_id) {
+        games[row.game_id].atBats.push({ id: row.ab_id, result: row.ab_result, after: row.ab_after, notes: row.ab_notes });
+      }
+    }
+    db = { games: Object.values(games) };
+    save();
+    setSyncStatus('idle');
+    renderAll();
+  } catch(e) { setSyncStatus('error'); }
+}
+
+// ── STATS MATH ────────────────────────────────────────────────────────────────
+// Official BA: H / (AB - BB)  =>  H / official_AB
+// AB (official) = PA - BB
+// OBP: (H + BB) / PA
+function calcStats(atBats) {
+  const hits = ['1B','2B','3B','HR'];
+  let H = 0, BB = 0, PA = atBats.length;
+  for (const ab of atBats) {
+    if (hits.includes(ab.result)) H++;
+    if (ab.result === 'BB') BB++;
+  }
+  const officialAB = PA - BB;
+  const BA = officialAB > 0 ? (H / officialAB) : null;
+  const OBP = PA > 0 ? ((H + BB) / PA) : null;
+  const HR = atBats.filter(a => a.result === 'HR').length;
+  const singles = atBats.filter(a => a.result === '1B').length;
+  const doubles = atBats.filter(a => a.result === '2B').length;
+  const triples = atBats.filter(a => a.result === '3B').length;
+  return { H, BB, PA, officialAB, BA, OBP, HR, singles, doubles, triples };
+}
+
+function fmtAvg(n) {
+  if (n === null) return '---';
+  return n === 1 ? '1.000' : n.toFixed(3).replace(/^0/, '');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderAll() {
+  renderGameList();
+  renderGlobalStats();
+  renderBAChart();
+  if (currentGameId) renderGameDetail();
+}
+
+function renderGameList() {
+  const list = document.getElementById('gameList');
+  const sorted = [...db.games].sort((a,b) => new Date(b.date) - new Date(a.date));
+  if (!sorted.length) {
+    list.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:0.65rem;letter-spacing:0.12em;">NO GAMES YET</div>';
+    return;
+  }
+  list.innerHTML = sorted.map(g => {
+    const s = calcStats(g.atBats || []);
+    const active = g.id === currentGameId ? 'active' : '';
+    const dateStr = formatDate(g.date);
+    const abBadges = (g.atBats||[]).map(ab => {
+      if (['1B','2B','3B'].includes(ab.result)) return `<span class="badge badge-hit">${ab.result}</span>`;
+      if (ab.result === 'HR') return `<span class="badge badge-hr">HR</span>`;
+      if (ab.result === 'BB') return `<span class="badge badge-walk">BB</span>`;
+      return `<span class="badge badge-out">OUT</span>`;
+    }).join(' ');
+    return `<div class="game-item ${active}" onclick="selectGame('${g.id}')">
+      <div class="game-date">${dateStr}</div>
+      <div class="game-info-text">${g.info || '—'}</div>
+      <div class="game-meta">
+        <span>${s.PA} PA</span>
+        <span>AVG ${fmtAvg(s.BA)}</span>
+        <span>${s.H} H</span>
+      </div>
+      <div style="margin-top:0.3rem;display:flex;gap:0.3rem;flex-wrap:wrap;">${abBadges}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderGlobalStats() {
+  const allABs = db.games.flatMap(g => g.atBats || []);
+  const s = calcStats(allABs);
+  document.getElementById('g-avg').textContent = fmtAvg(s.BA);
+  document.getElementById('g-obp').textContent = fmtAvg(s.OBP);
+  document.getElementById('g-hits').textContent = s.H;
+  document.getElementById('g-ab').textContent = s.officialAB;
+  document.getElementById('g-hr').textContent = s.HR;
+  document.getElementById('g-bb').textContent = s.BB;
+  document.getElementById('g-games').textContent = db.games.length;
+}
+
+function renderGameDetail() {
+  const game = db.games.find(g => g.id === currentGameId);
+  if (!game) { showEmpty(); return; }
+  document.getElementById('emptyState').classList.add('hidden');
+  const gd = document.getElementById('gameDetail');
+  gd.classList.remove('hidden');
+  gd.style.display = 'flex';
+
+  document.getElementById('detailDate').innerHTML = formatDate(game.date);
+  document.getElementById('detailInfo').textContent = game.info || '';
+
+  const s = calcStats(game.atBats || []);
+  const row = document.getElementById('gameStatsRow');
+  row.innerHTML = `
+    <div class="mini-stat"><div class="mini-label">AVG</div><div class="mini-val">${fmtAvg(s.BA)}</div></div>
+    <div class="mini-stat"><div class="mini-label">OBP</div><div class="mini-val" style="color:var(--neon-blue)">${fmtAvg(s.OBP)}</div></div>
+    <div class="mini-stat"><div class="mini-label">Hits</div><div class="mini-val">${s.H}</div></div>
+    <div class="mini-stat"><div class="mini-label">Off. AB</div><div class="mini-val">${s.officialAB}</div></div>
+    <div class="mini-stat"><div class="mini-label">PA</div><div class="mini-val">${s.PA}</div></div>
+    <div class="mini-stat"><div class="mini-label">BB</div><div class="mini-val" style="color:var(--neon-blue)">${s.BB}</div></div>
+    <div class="mini-stat"><div class="mini-label">HR</div><div class="mini-val" style="color:var(--neon-pink)">${s.HR}</div></div>
+  `;
+
+  const abContent = document.getElementById('abContent');
+  const abs = game.atBats || [];
+  if (!abs.length) {
+    abContent.innerHTML = '<div class="no-abs">NO AT-BATS LOGGED YET — HIT + AT BAT TO ADD ONE</div>';
+  } else {
+    abContent.innerHTML = `<table class="ab-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Result</th>
+          <th>After</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${abs.map((ab, i) => `
+          <tr>
+            <td class="ab-num">${i+1}</td>
+            <td><span class="result-chip rc-${ab.result}">${resultLabel(ab.result)}</span></td>
+            <td class="after-text">${ab.after || '—'}</td>
+            <td class="notes-text">${ab.notes || ''}</td>
+            <td><button class="del-ab" onclick="deleteAB('${game.id}','${ab.id}')" title="Delete">✕</button></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  // hit breakdown
+  const hbSection = document.getElementById('hitBreakdownSection');
+  const hb = document.getElementById('hitBreakdown');
+  hb.innerHTML = `
+    <div class="hb-item"><div class="hb-count" style="color:var(--neon-green)">${s.singles}</div><div class="hb-label">1B</div></div>
+    <div class="hb-item"><div class="hb-count" style="color:var(--neon-blue)">${s.doubles}</div><div class="hb-label">2B</div></div>
+    <div class="hb-item"><div class="hb-count" style="color:var(--neon-yellow)">${s.triples}</div><div class="hb-label">3B</div></div>
+    <div class="hb-item"><div class="hb-count" style="color:var(--neon-pink)">${s.HR}</div><div class="hb-label">HR</div></div>
+    <div class="hb-item"><div class="hb-count" style="color:var(--neon-blue)">${s.BB}</div><div class="hb-label">BB</div></div>
+    <div class="hb-item"><div class="hb-count" style="color:var(--muted2)">${s.PA - s.H - s.BB}</div><div class="hb-label">OUT</div></div>
+  `;
+  hbSection.style.display = s.PA > 0 ? 'block' : 'none';
+}
+
+function renderBAChart() {
+  const sorted = [...db.games].sort((a,b) => new Date(a.date) - new Date(b.date));
+  const wrap = document.getElementById('globalChartWrap');
+  if (sorted.length < 2) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+
+  const labels = sorted.map(g => formatDate(g.date));
+  const data = sorted.map(g => {
+    const s = calcStats(g.atBats || []);
+    return s.BA !== null ? parseFloat(s.BA.toFixed(3)) : null;
+  });
+
+  if (baChartInstance) baChartInstance.destroy();
+  baChartInstance = new Chart(document.getElementById('baChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'BA',
+        data,
+        borderColor: '#00ff88',
+        backgroundColor: 'rgba(0,255,136,0.08)',
+        pointBackgroundColor: '#00ff88',
+        pointBorderColor: '#00ff88',
+        pointRadius: 5,
+        tension: 0.3,
+        fill: true,
+        spanGaps: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          ticks: { color: '#444466', font: { family: 'Share Tech Mono', size: 10 }, maxRotation: 30 },
+          grid: { color: 'rgba(30,30,50,0.8)' }
+        },
+        y: {
+          min: 0, max: 1,
+          ticks: {
+            color: '#444466', font: { family: 'Share Tech Mono', size: 10 },
+            callback: v => v.toFixed(3).replace(/^0/,'')
+          },
+          grid: { color: 'rgba(30,30,50,0.8)' }
+        }
+      }
+    }
+  });
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function formatDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m)-1]} ${parseInt(day)}, ${y}`;
+}
+
+function resultLabel(r) {
+  return { '1B':'Single','2B':'Double','3B':'Triple','HR':'Home Run','BB':'Walk','OUT':'Out' }[r] || r;
+}
+
+function showEmpty() {
+  document.getElementById('emptyState').classList.remove('hidden');
+  document.getElementById('emptyState').style.display = 'flex';
+  const gd = document.getElementById('gameDetail');
+  gd.classList.add('hidden');
+  gd.style.display = 'none';
+}
+
+function selectGame(id) {
+  currentGameId = id;
+  renderGameList();
+  renderGameDetail();
+}
+
+// ── MODALS ────────────────────────────────────────────────────────────────────
+function openNewGameModal() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('newGameDate').value = today;
+  document.getElementById('newGameInfo').value = '';
+  openModal('gameModal');
+}
+
+function openNewABModal() {
+  selectedResult = null;
+  document.getElementById('abResult').value = '';
+  document.getElementById('abAfter').value = '';
+  document.getElementById('abNotes').value = '';
+  document.querySelectorAll('.result-btn').forEach(b => {
+    b.className = 'result-btn';
+  });
+  openModal('abModal');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function selectResult(btn) {
+  document.querySelectorAll('.result-btn').forEach(b => {
+    const r = b.dataset.result;
+    b.className = 'result-btn';
+  });
+  const r = btn.dataset.result;
+  btn.classList.add('sel-' + r);
+  selectedResult = r;
+  document.getElementById('abResult').value = r;
+}
+
+function saveNewGame() {
+  const date = document.getElementById('newGameDate').value;
+  const info = document.getElementById('newGameInfo').value.trim();
+  if (!date) { alert('Please pick a date.'); return; }
+  const game = { id: uid(), date, info, atBats: [] };
+  db.games.push(game);
+  save();
+  closeModal('gameModal');
+  currentGameId = game.id;
+  renderAll();
+  // game with no ABs yet — just sync a placeholder row so the game exists
+  gsPost({ action: 'upsert', game_id: game.id, game_date: game.date, game_info: game.info,
+    ab_id: '', ab_result: '', ab_after: '', ab_notes: '', created_at: new Date().toISOString() });
+}
+
+function saveNewAB() {
+  if (!selectedResult) { alert('Select a result first.'); return; }
+  const game = db.games.find(g => g.id === currentGameId);
+  if (!game) return;
+  const ab = {
+    id: uid(),
+    result: selectedResult,
+    after: document.getElementById('abAfter').value,
+    notes: document.getElementById('abNotes').value.trim()
+  };
+  game.atBats.push(ab);
+  save();
+  closeModal('abModal');
+  renderAll();
+  gsPost({ action: 'upsert', game_id: game.id, game_date: game.date, game_info: game.info,
+    ab_id: ab.id, ab_result: ab.result, ab_after: ab.after, ab_notes: ab.notes,
+    created_at: new Date().toISOString() });
+}
+
+function deleteAB(gameId, abId) {
+  const game = db.games.find(g => g.id === gameId);
+  if (!game) return;
+  game.atBats = game.atBats.filter(a => a.id !== abId);
+  save();
+  renderAll();
+  gsPost({ action: 'delete_ab', ab_id: abId });
+}
+
+function deleteCurrentGame() {
+  if (!currentGameId) return;
+  const game = db.games.find(g => g.id === currentGameId);
+  if (!game) return;
+  if (!confirm(`Delete game on ${formatDate(game.date)}? This cannot be undone.`)) return;
+  const gid = currentGameId;
+  db.games = db.games.filter(g => g.id !== currentGameId);
+  currentGameId = null;
+  save();
+  showEmpty();
+  renderAll();
+  gsPost({ action: 'delete_game', game_id: gid });
+}
+
+// close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderAll();
+loadFromSheet();
+</script>
+</body>
+</html>
