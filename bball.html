@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0a0f">
 <title>bball — jacobt.app</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
@@ -18,19 +20,35 @@
     --neon-pink: #ff2d7a;
     --neon-orange: #ff8c00;
     --neon-yellow: #ffe500;
-    --text: #e0e0f0;
-    --muted: #444466;
-    --muted2: #666688;
+    --text: #e8e8f8;
+    --muted: #6a6a9a;
+    --muted2: #9999cc;
+    color-scheme: dark;
+  }
+
+  html {
+    background: #0a0a0f !important;
+    color-scheme: dark !important;
+  }
+
+  /* Force dark — override any OS/browser light injection */
+  @media (prefers-color-scheme: light) {
+    html, body {
+      background: #0a0a0f !important;
+      color: #e8e8f8 !important;
+    }
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--bg);
-    color: var(--text);
+    background: #0a0a0f !important;
+    background-color: #0a0a0f !important;
+    color: #e8e8f8 !important;
     font-family: 'Rajdhani', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
   }
 
   body::before {
@@ -89,7 +107,7 @@
   .stat-box {
     flex: 1;
     min-width: 90px;
-    padding: 1rem 1.2rem;
+    padding: 1.1rem 1.3rem;
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -98,16 +116,17 @@
   .stat-box:last-child { border-right: none; }
   .stat-label {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.2em;
-    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--muted2);
     text-transform: uppercase;
   }
   .stat-val {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
+    font-size: 2.6rem;
     line-height: 1;
     color: var(--neon-green);
+    text-shadow: 0 0 16px rgba(0,255,136,0.35);
     text-shadow: 0 0 16px rgba(0,255,136,0.4);
   }
   .stat-val.blue { color: var(--neon-blue); text-shadow: 0 0 16px rgba(0,207,255,0.4); }
@@ -117,7 +136,7 @@
   /* ── MAIN LAYOUT ── */
   .main {
     display: grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 340px 1fr;
     min-height: calc(100vh - 160px);
   }
   @media (max-width: 700px) {
@@ -129,6 +148,7 @@
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
+    background: #0a0a0f !important;
   }
   .sidebar-header {
     padding: 1rem 1.2rem 0.8rem;
@@ -139,8 +159,8 @@
   }
   .section-title {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.22em;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
     color: var(--muted2);
     text-transform: uppercase;
   }
@@ -159,32 +179,34 @@
 
   .game-list { flex: 1; overflow-y: auto; }
   .game-item {
-    padding: 0.9rem 1.2rem;
+    padding: 1.1rem 1.3rem;
     border-bottom: 1px solid var(--border);
     cursor: pointer;
     transition: background 0.15s;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
+    background: #0a0a0f !important;
   }
-  .game-item:hover { background: var(--surface); }
-  .game-item.active { background: var(--surface2); border-left: 2px solid var(--neon-green); }
+  .game-item:hover { background: #12121a !important; }
+  .game-item.active { background: #18182a !important; border-left: 3px solid var(--neon-green); }
   .game-date {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.6rem;
     letter-spacing: 0.05em;
     color: var(--neon-green);
+    text-shadow: 0 0 12px rgba(0,255,136,0.3);
   }
   .game-info-text {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #e8e8f8;
     letter-spacing: 0.04em;
   }
   .game-meta {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--muted);
+    font-size: 0.72rem;
+    color: var(--muted2);
     letter-spacing: 0.1em;
     display: flex;
     gap: 0.7rem;
@@ -203,7 +225,7 @@
   .badge-hr { border-color: var(--neon-pink); color: var(--neon-pink); }
 
   /* ── GAME DETAIL PANEL ── */
-  .detail-panel { display: flex; flex-direction: column; }
+  .detail-panel { display: flex; flex-direction: column; background: #0a0a0f !important; }
   .detail-header {
     padding: 1rem 1.5rem 0.8rem;
     border-bottom: 1px solid var(--border);
@@ -274,22 +296,22 @@
   .ab-table { width: 100%; border-collapse: collapse; }
   .ab-table th {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: var(--muted2);
     text-transform: uppercase;
     text-align: left;
     padding: 0.4rem 0.8rem;
     border-bottom: 1px solid var(--border);
   }
   .ab-table td {
-    padding: 0.65rem 0.8rem;
+    padding: 0.75rem 0.8rem;
     border-bottom: 1px solid var(--border);
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     vertical-align: top;
   }
-  .ab-table tr:hover td { background: var(--surface); }
+  .ab-table tr:hover td { background: #12121a !important; }
   .ab-num {
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.7rem;
@@ -299,7 +321,7 @@
     display: inline-block;
     padding: 0.15rem 0.6rem;
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     letter-spacing: 0.08em;
     border: 1px solid;
     white-space: nowrap;
@@ -310,8 +332,8 @@
   .rc-HR { border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,122,0.1); }
   .rc-BB { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,207,255,0.06); }
   .rc-OUT { border-color: var(--muted); color: var(--muted2); }
-  .after-text { font-size: 0.82rem; color: var(--muted2); font-weight: 600; }
-  .notes-text { font-size: 0.78rem; color: var(--muted); font-style: italic; font-family: 'Share Tech Mono', monospace; }
+  .after-text { font-size: 0.95rem; color: var(--muted2); font-weight: 600; }
+  .notes-text { font-size: 0.85rem; color: var(--muted2); font-style: italic; font-family: 'Share Tech Mono', monospace; }
   .del-ab { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 0.1rem 0.3rem; }
   .del-ab:hover { color: var(--neon-pink); }
 
@@ -319,22 +341,22 @@
   .game-stats-row {
     display: flex;
     gap: 1.5rem;
-    padding: 0.8rem 1.5rem;
+    padding: 0.9rem 1.5rem;
     border-bottom: 1px solid var(--border);
-    background: var(--surface);
+    background: #12121a !important;
     flex-wrap: wrap;
   }
   .mini-stat { display: flex; flex-direction: column; gap: 0.15rem; }
   .mini-label {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 0.18em;
-    color: var(--muted);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--muted2);
     text-transform: uppercase;
   }
   .mini-val {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     line-height: 1;
     color: var(--neon-green);
   }
@@ -352,7 +374,7 @@
   }
   .modal-overlay.open { display: flex; }
   .modal {
-    background: var(--surface);
+    background: #12121a !important;
     border: 1px solid var(--border2);
     width: 100%;
     max-width: 480px;
@@ -396,21 +418,22 @@
   .form-label {
     display: block;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
     color: var(--muted2);
     text-transform: uppercase;
     margin-bottom: 0.4rem;
   }
   .form-input, .form-select, .form-textarea {
     width: 100%;
-    background: var(--bg);
+    background: #0a0a0f !important;
     border: 1px solid var(--border2);
-    color: var(--text);
+    color: #e8e8f8 !important;
+    -webkit-appearance: none;
     font-family: 'Rajdhani', sans-serif;
     font-weight: 600;
-    font-size: 1rem;
-    padding: 0.55rem 0.8rem;
+    font-size: 1.05rem;
+    padding: 0.65rem 0.9rem;
     outline: none;
     transition: border-color 0.15s;
   }
@@ -428,12 +451,12 @@
     margin-top: 0.3rem;
   }
   .result-btn {
-    padding: 0.5rem 0.3rem;
+    padding: 0.65rem 0.3rem;
     background: transparent;
     border: 1px solid var(--border2);
     color: var(--muted2);
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     letter-spacing: 0.08em;
     cursor: pointer;
     transition: all 0.15s;
@@ -446,6 +469,21 @@
   .result-btn.sel-HR, .result-btn.sel-HR:hover { border-color: var(--neon-pink); color: var(--neon-pink); background: rgba(255,45,122,0.1); }
   .result-btn.sel-BB, .result-btn.sel-BB:hover { border-color: var(--neon-blue); color: var(--neon-blue); background: rgba(0,207,255,0.08); }
   .result-btn.sel-OUT, .result-btn.sel-OUT:hover { border-color: var(--muted2); color: var(--text); background: rgba(100,100,150,0.12); }
+  .result-btn.sel-S,   .result-btn.sel-S:hover   { border-color: var(--neon-green);  color: var(--neon-green);  background: rgba(0,255,136,0.08); }
+  .result-btn.sel-B,   .result-btn.sel-B:hover   { border-color: var(--neon-blue);   color: var(--neon-blue);   background: rgba(0,207,255,0.08); }
+  .result-btn.sel-F,   .result-btn.sel-F:hover   { border-color: var(--neon-yellow); color: var(--neon-yellow); background: rgba(255,229,0,0.08); }
+  .result-btn.sel-K,   .result-btn.sel-K:hover   { border-color: var(--neon-green);  color: var(--neon-green);  background: rgba(0,255,136,0.1);  }
+  .result-btn.sel-BB,  .result-btn.sel-BB:hover  { border-color: var(--neon-blue);   color: var(--neon-blue);   background: rgba(0,207,255,0.08); }
+  .result-btn.sel-HBP, .result-btn.sel-HBP:hover { border-color: var(--neon-yellow); color: var(--neon-yellow); background: rgba(255,229,0,0.08); }
+  .result-btn.sel-GO,  .result-btn.sel-GO:hover  { border-color: var(--muted2);      color: var(--text);        background: rgba(100,100,150,0.12); }
+  .result-btn.sel-FO,  .result-btn.sel-FO:hover  { border-color: var(--muted2);      color: var(--text);        background: rgba(100,100,150,0.12); }
+  .result-btn.sel-LO,  .result-btn.sel-LO:hover  { border-color: var(--muted2);      color: var(--text);        background: rgba(100,100,150,0.12); }
+  .result-btn.sel-1B,  .result-btn.sel-1B:hover  { border-color: var(--neon-green);  color: var(--neon-green);  background: rgba(0,255,136,0.08); }
+  .result-btn.sel-2B,  .result-btn.sel-2B:hover  { border-color: var(--neon-blue);   color: var(--neon-blue);   background: rgba(0,207,255,0.08); }
+  .result-btn.sel-3B,  .result-btn.sel-3B:hover  { border-color: var(--neon-yellow); color: var(--neon-yellow); background: rgba(255,229,0,0.08); }
+  .result-btn.sel-HR,  .result-btn.sel-HR:hover  { border-color: var(--neon-pink);   color: var(--neon-pink);   background: rgba(255,45,122,0.1);  }
+  .result-btn.sel-FC,  .result-btn.sel-FC:hover  { border-color: var(--muted2);      color: var(--text);        background: rgba(100,100,150,0.12); }
+  .result-btn.sel-E,   .result-btn.sel-E:hover   { border-color: var(--neon-pink);   color: var(--neon-pink);   background: rgba(255,45,122,0.08); }
 
   .btn-save {
     font-family: 'Bebas Neue', sans-serif;
@@ -473,7 +511,7 @@
   .btn-cancel:hover { border-color: var(--muted2); color: var(--text); }
 
   .hidden { display: none !important; }
-  .no-abs { padding: 2rem; text-align: center; color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em; }
+  .no-abs { padding: 2rem; text-align: center; color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: 0.82rem; letter-spacing: 0.1em; }
 
   /* ── CHART SECTION ── */
   .chart-section {
@@ -482,9 +520,9 @@
   }
   .chart-title {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.2em;
-    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--muted2);
     text-transform: uppercase;
     margin-bottom: 0.8rem;
   }
@@ -504,14 +542,14 @@
   }
   .hb-count {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
+    font-size: 2rem;
     line-height: 1;
   }
   .hb-label {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 0.12em;
-    color: var(--muted);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--muted2);
     text-transform: uppercase;
   }
 
@@ -527,6 +565,123 @@
     text-transform: uppercase;
     margin-bottom: 0.8rem;
   }
+
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted2);
+    padding: 0.75rem 1.6rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: -1px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--neon-green); border-bottom-color: var(--neon-green); }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ── DEFENSE / PITCHING ── */
+  .defense-section { padding: 1.2rem 1.5rem; background: #0a0a0f !important; }
+  .defense-block { margin-bottom: 1.8rem; }
+  .defense-block-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: var(--muted2);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pitch-inning {
+    margin-bottom: 1.2rem;
+  }
+  .pitch-inning-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    color: var(--neon-orange);
+    margin-bottom: 0.5rem;
+  }
+  .pitch-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .pitch-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 0.8rem;
+    background: #12121a !important;
+    border: 1px solid #2a2a42;
+  }
+  .pitch-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted2);
+    min-width: 20px;
+  }
+  .pitch-result-chip {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid;
+  }
+  .prc-K   { border-color: var(--neon-green); color: var(--neon-green); }
+  .prc-BB  { border-color: var(--neon-blue);  color: var(--neon-blue);  }
+  .prc-GO  { border-color: var(--muted);      color: var(--muted2);     }
+  .prc-FO  { border-color: var(--muted);      color: var(--muted2);     }
+  .prc-H   { border-color: var(--neon-pink);  color: var(--neon-pink);  }
+  .prc-HR  { border-color: var(--neon-pink);  color: var(--neon-pink);  }
+  .prc-HBP { border-color: var(--neon-yellow);color: var(--neon-yellow);}
+  .prc-H   { border-color: var(--neon-green); color: var(--neon-green); }
+  .prc-LO  { border-color: var(--muted);      color: var(--muted2);     }
+  .pitch-note { font-size: 0.95rem; color: var(--text); font-weight: 600; flex: 1; }
+  .del-pitch { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; margin-left: auto; }
+  .del-pitch:hover { color: var(--neon-pink); }
+
+  .fielding-note-item {
+    padding: 0.7rem 0.9rem;
+    background: #12121a !important;
+    border: 1px solid #2a2a42;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+  .fielding-note-text { flex: 1; font-size: 1.05rem; font-weight: 600; color: var(--text); }
+  .fielding-note-inning {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--neon-orange);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  .highlights-box {
+    width: 100%;
+    background: #0a0a0f !important;
+    border: 1px solid var(--border2);
+    color: #e8e8f8 !important;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 0.75rem 0.9rem;
+    outline: none;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.15s;
+  }
+  .highlights-box:focus { border-color: var(--neon-green); }
 
   /* scrollbar */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -603,17 +758,58 @@
           <div class="tagline" id="detailInfo" style="color:var(--muted2);font-size:0.85rem;"></div>
         </div>
         <div class="detail-actions">
-          <button class="btn primary" onclick="openNewABModal()">+ At Bat</button>
+          <button class="btn primary" id="btnAddAB" onclick="openNewABModal()">+ At Bat</button>
           <button class="btn danger" onclick="deleteCurrentGame()">Delete Game</button>
         </div>
       </div>
       <div class="game-stats-row" id="gameStatsRow"></div>
-      <div class="ab-section">
-        <div id="abContent"></div>
+
+      <!-- TABS -->
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('hitting')">Hitting</button>
+        <button class="tab-btn" onclick="switchTab('defense')">Defense</button>
       </div>
-      <div class="chart-section" id="hitBreakdownSection">
-        <div class="chart-title">// hit breakdown this game</div>
-        <div class="hit-breakdown" id="hitBreakdown"></div>
+
+      <!-- HITTING TAB -->
+      <div class="tab-pane active" id="tab-hitting">
+        <div class="ab-section">
+          <div id="abContent"></div>
+        </div>
+        <div class="chart-section" id="hitBreakdownSection">
+          <div class="chart-title">// hit breakdown this game</div>
+          <div class="hit-breakdown" id="hitBreakdown"></div>
+        </div>
+      </div>
+
+      <!-- DEFENSE TAB -->
+      <div class="tab-pane" id="tab-defense">
+        <div class="defense-section">
+
+          <!-- PITCHING -->
+          <div class="defense-block">
+            <div class="defense-block-title">
+              <span>// pitching log</span>
+              <button class="btn primary" onclick="openNewPitchModal()">+ Pitch</button>
+            </div>
+            <div id="pitchingLog"></div>
+          </div>
+
+          <!-- FIELDING NOTES -->
+          <div class="defense-block">
+            <div class="defense-block-title">
+              <span>// fielding notes</span>
+              <button class="btn primary" onclick="openNewFieldingModal()">+ Note</button>
+            </div>
+            <div id="fieldingLog"></div>
+          </div>
+
+          <!-- HIGHLIGHTS -->
+          <div class="defense-block">
+            <div class="defense-block-title"><span>// game highlights / comments</span></div>
+            <textarea class="highlights-box" id="gameHighlights" placeholder="General notes, highlights, comments about the game…" oninput="saveHighlights()"></textarea>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
@@ -699,7 +895,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────────────
-const GS_URL = 'https://script.google.com/macros/s/AKfycbydpvX5Xetya5k31kTEHpUiVyXjl_jAhqMjU_5tpTm9IrdqMhwp5f8xxjk64o1iRoAnXw/exec';
+const GS_URL = 'https://script.google.com/macros/s/AKfycbzbbu2aQqlyCP2x8f_pX90ZdmqWkrl-nypjw8qO6Ezy5zFauXmZK2gI3gZyqIOIyEKgRw/exec';
 
 let db = JSON.parse(localStorage.getItem('bball_db') || '{"games":[]}');
 let currentGameId = null;
@@ -736,11 +932,23 @@ async function loadFromSheet() {
     for (const row of json.data) {
       if (!row.game_id) continue;
       if (!games[row.game_id]) {
-        games[row.game_id] = { id: row.game_id, date: row.game_date, info: row.game_info, atBats: [] };
+        games[row.game_id] = { id: row.game_id, date: row.game_date, info: row.game_info,
+          atBats: [], pitches: [], fielding: [], highlights: '' };
       }
+      const g = games[row.game_id];
       if (row.ab_id) {
-        games[row.game_id].atBats.push({ id: row.ab_id, result: row.ab_result, after: row.ab_after, notes: row.ab_notes });
+        if (!g.atBats.find(a => a.id === row.ab_id))
+          g.atBats.push({ id: row.ab_id, result: row.ab_result, after: row.ab_after, notes: row.ab_notes });
       }
+      if (row.pitch_id) {
+        if (!g.pitches.find(p => p.id === row.pitch_id))
+          g.pitches.push({ id: row.pitch_id, result: row.pitch_result, note: row.pitch_note });
+      }
+      if (row.fielding_id) {
+        if (!g.fielding.find(f => f.id === row.fielding_id))
+          g.fielding.push({ id: row.fielding_id, inning: row.fielding_inning, note: row.fielding_note });
+      }
+      if (row.highlights) g.highlights = row.highlights;
     }
     db = { games: Object.values(games) };
     save();
@@ -853,28 +1061,23 @@ function renderGameDetail() {
   if (!abs.length) {
     abContent.innerHTML = '<div class="no-abs">NO AT-BATS LOGGED YET — HIT + AT BAT TO ADD ONE</div>';
   } else {
-    abContent.innerHTML = `<table class="ab-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Result</th>
-          <th>After</th>
-          <th>Notes</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        ${abs.map((ab, i) => `
-          <tr>
-            <td class="ab-num">${i+1}</td>
-            <td><span class="result-chip rc-${ab.result}">${resultLabel(ab.result)}</span></td>
-            <td class="after-text">${ab.after || '—'}</td>
-            <td class="notes-text">${ab.notes || ''}</td>
-            <td><button class="del-ab" onclick="deleteAB('${game.id}','${ab.id}')" title="Delete">✕</button></td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>`;
+    const rcChipClass = r => {
+      if (r === 'HR') return 'prc-HR';
+      if (['1B','2B','3B'].includes(r)) return 'prc-H';
+      if (r === 'BB') return 'prc-BB';
+      return 'prc-GO';
+    };
+    abContent.innerHTML = '<div class="pitch-list" style="padding:0.8rem 1rem;">' +
+      abs.map((ab, i) => `
+        <div class="pitch-row">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--neon-orange);min-width:36px;">${i+1}</span>
+          <span class="pitch-result-chip ${rcChipClass(ab.result)}">${resultLabel(ab.result)}</span>
+          ${ab.after ? `<span class="pitch-note" style="color:var(--muted2);">${ab.after}</span>` : ''}
+          ${ab.notes ? `<span class="pitch-note" style="font-style:italic;color:var(--muted2);font-size:0.88rem;">${ab.notes}</span>` : ''}
+          <button class="del-ab" onclick="deleteAB('${game.id}','${ab.id}')" title="Delete" style="margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;">✕</button>
+        </div>`
+      ).join('') +
+    '</div>';
   }
 
   // hit breakdown
@@ -889,6 +1092,8 @@ function renderGameDetail() {
     <div class="hb-item"><div class="hb-count" style="color:var(--muted2)">${s.PA - s.H - s.BB}</div><div class="hb-label">OUT</div></div>
   `;
   hbSection.style.display = s.PA > 0 ? 'block' : 'none';
+  // render defense tab too
+  renderDefense();
 }
 
 function renderBAChart() {
@@ -1064,9 +1269,275 @@ document.querySelectorAll('.modal-overlay').forEach(el => {
   el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
 });
 
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['hitting','defense'][i] === name);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => {
+    p.classList.toggle('active', p.id === 'tab-' + name);
+  });
+  const btnAB = document.getElementById('btnAddAB');
+  if (btnAB) btnAB.style.display = name === 'hitting' ? '' : 'none';
+}
+
+// ── DEFENSE RENDER ────────────────────────────────────────────────────────────
+function renderDefense() {
+  const game = db.games.find(g => g.id === currentGameId);
+  if (!game) return;
+
+  // Pitching log — straight sequential pitch count
+  const pitches = game.pitches || [];
+  const pitchLog = document.getElementById('pitchingLog');
+  if (!pitches.length) {
+    pitchLog.innerHTML = '<div class="no-abs">NO PITCHING LOGGED — HIT + PITCH TO START</div>';
+  } else {
+    const chipClass = r => {
+      if (['S','F','K'].includes(r)) return 'prc-K';
+      if (['B','BB','HBP'].includes(r)) return 'prc-BB';
+      if (['1B','2B','3B'].includes(r)) return 'prc-H';
+      if (r === 'HR') return 'prc-HR';
+      return 'prc-GO';
+    };
+    const OUT_RESULTS = ['K','GO','FO','LO'];
+    pitchLog.innerHTML = `<div class="pitch-list">` +
+      pitches.map((p, i) => {
+        const isOut = OUT_RESULTS.includes(p.result);
+        return `
+        <div class="pitch-row">
+          <span class="pitch-num" style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--neon-orange);min-width:36px;">${i+1}</span>
+          <span class="pitch-result-chip ${chipClass(p.result)}">${pitchResultLabel(p.result)}</span>
+          <span class="pitch-note">${p.note || ''}</span>
+          <button class="del-pitch" onclick="deletePitch('${game.id}','${p.id}')" title="Delete">✕</button>
+        </div>
+        ${isOut ? '<div style="border-top:1px solid #2a2a42;margin:0.5rem 0 0.7rem;opacity:0.7;"></div>' : ''}`;
+      }).join('') +
+    `</div>`;
+  }
+
+  // Pitching summary
+  const totalPitches = pitches.length;
+  const outs = pitches.filter(p => pitchIsOut(p.result)).length;
+  const fullInnings = Math.floor(outs / 3);
+  const partialOuts = outs % 3;
+  const ipStr = partialOuts > 0 ? `${fullInnings}.${partialOuts}` : `${fullInnings}`;
+  const hits = pitches.filter(p => pitchIsHit(p.result)).length;
+  const walks = pitches.filter(p => p.result === 'BB').length;
+  const ks = pitches.filter(p => p.result === 'K').length;
+  const summaryEl = document.getElementById('pitchSummary');
+  if (summaryEl && pitches.length) {
+    summaryEl.innerHTML = `
+      <span style="color:var(--neon-orange)">${ipStr} IP</span>
+      <span>${totalPitches} P</span>
+      <span>${hits} H</span>
+      <span>${walks} BB</span>
+      <span style="color:var(--neon-green)">${ks} K</span>
+    `;
+  }
+
+  // Fielding log
+  const fielding = game.fielding || [];
+  const fieldLog = document.getElementById('fieldingLog');
+  const ordinals2 = ['','1st','2nd','3rd','4th','5th','6th','7th'];
+  if (!fielding.length) {
+    fieldLog.innerHTML = '<div class="no-abs">NO FIELDING NOTES YET</div>';
+  } else {
+    fieldLog.innerHTML = fielding.map(f => `
+      <div class="fielding-note-item">
+        ${f.inning ? `<span class="fielding-note-inning">${ordinals2[f.inning]||f.inning}</span>` : ''}
+        <span class="fielding-note-text">${f.note}</span>
+        <button class="del-pitch" onclick="deleteFieldingNote('${game.id}','${f.id}')" title="Delete">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // Highlights
+  const hEl = document.getElementById('gameHighlights');
+  if (hEl) hEl.value = game.highlights || '';
+}
+
+function pitchResultLabel(r) {
+  return {
+    S:'Strike', B:'Ball', F:'Foul', K:'Strikeout', BB:'Walk', HBP:'HBP',
+    GO:'Groundout', FO:'Flyout', LO:'Lineout',
+    '1B':'Single', '2B':'Double', '3B':'Triple', HR:'Home Run',
+    FC:"Fielder's Choice", E:'Error'
+  }[r] || r;
+}
+
+function pitchIsOut(r)  { return ['K','GO','FO','LO'].includes(r); }
+function pitchIsHit(r)  { return ['1B','2B','3B','HR'].includes(r); }
+function pitchEndsAB(r) { return ['K','GO','FO','LO','BB','HBP','1B','2B','3B','HR','FC','E'].includes(r); }
+
+// ── PITCH MODAL ───────────────────────────────────────────────────────────────
+let selectedPitchResult = null;
+
+function openNewPitchModal() {
+  selectedPitchResult = null;
+  document.getElementById('pitchResult').value = '';
+  document.getElementById('pitchNote').value = '';
+  document.querySelectorAll('[data-pr]').forEach(b => b.className = 'result-btn');
+  openModal('pitchModal');
+}
+
+function selectPitchResult(btn) {
+  document.querySelectorAll('[data-pr]').forEach(b => b.className = 'result-btn');
+  btn.classList.add('sel-' + btn.dataset.pr);
+  selectedPitchResult = btn.dataset.pr;
+  document.getElementById('pitchResult').value = btn.dataset.pr;
+}
+
+function saveNewPitch() {
+  if (!selectedPitchResult) { alert('Select a result first.'); return; }
+  const game = db.games.find(g => g.id === currentGameId);
+  if (!game) return;
+  if (!game.pitches) game.pitches = [];
+  const p = {
+    id: uid(),
+    result: selectedPitchResult,
+    note: document.getElementById('pitchNote').value.trim()
+  };
+  game.pitches.push(p);
+  save();
+  closeModal('pitchModal');
+  renderDefense();
+  gsPost({ action: 'upsert_pitch', game_id: game.id, game_date: game.date, game_info: game.info,
+    pitch_id: p.id, pitch_result: p.result, pitch_note: p.note,
+    created_at: new Date().toISOString() });
+}
+
+function deletePitch(gameId, pitchId) {
+  const game = db.games.find(g => g.id === gameId);
+  if (!game) return;
+  game.pitches = (game.pitches || []).filter(p => p.id !== pitchId);
+  save();
+  renderDefense();
+  gsPost({ action: 'delete_pitch', pitch_id: pitchId });
+}
+
+// ── FIELDING MODAL ────────────────────────────────────────────────────────────
+function openNewFieldingModal() {
+  document.getElementById('fieldingInning').value = '';
+  document.getElementById('fieldingNote').value = '';
+  openModal('fieldingModal');
+}
+
+function saveNewFieldingNote() {
+  const note = document.getElementById('fieldingNote').value.trim();
+  if (!note) { alert('Enter a note.'); return; }
+  const game = db.games.find(g => g.id === currentGameId);
+  if (!game) return;
+  if (!game.fielding) game.fielding = [];
+  const f = {
+    id: uid(),
+    inning: document.getElementById('fieldingInning').value,
+    note
+  };
+  game.fielding.push(f);
+  save();
+  closeModal('fieldingModal');
+  renderDefense();
+  gsPost({ action: 'upsert_fielding', game_id: game.id, game_date: game.date, game_info: game.info,
+    fielding_id: f.id, fielding_inning: f.inning, fielding_note: f.note,
+    created_at: new Date().toISOString() });
+}
+
+function deleteFieldingNote(gameId, fId) {
+  const game = db.games.find(g => g.id === gameId);
+  if (!game) return;
+  game.fielding = (game.fielding || []).filter(f => f.id !== fId);
+  save();
+  renderDefense();
+  gsPost({ action: 'delete_fielding', fielding_id: fId });
+}
+
+let highlightsTimer = null;
+function saveHighlights() {
+  const game = db.games.find(g => g.id === currentGameId);
+  if (!game) return;
+  game.highlights = document.getElementById('gameHighlights').value;
+  save();
+  clearTimeout(highlightsTimer);
+  highlightsTimer = setTimeout(() => {
+    gsPost({ action: 'upsert_highlights', game_id: game.id, game_date: game.date,
+      game_info: game.info, highlights: game.highlights });
+  }, 1500);
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 renderAll();
 loadFromSheet();
 </script>
+
+<!-- NEW PITCH MODAL -->
+<div class="modal-overlay" id="pitchModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Log Pitch</div>
+      <button class="modal-close" onclick="closeModal('pitchModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Pitch Result</label>
+        <div class="result-grid" style="grid-template-columns:repeat(3,1fr);">
+          <button class="result-btn" data-pr="S"   onclick="selectPitchResult(this)">Strike</button>
+          <button class="result-btn" data-pr="B"   onclick="selectPitchResult(this)">Ball</button>
+          <button class="result-btn" data-pr="F"   onclick="selectPitchResult(this)">Foul</button>
+          <button class="result-btn" data-pr="K"   onclick="selectPitchResult(this)">Strikeout</button>
+          <button class="result-btn" data-pr="BB"  onclick="selectPitchResult(this)">Walk</button>
+          <button class="result-btn" data-pr="HBP" onclick="selectPitchResult(this)">HBP</button>
+          <button class="result-btn" data-pr="GO"  onclick="selectPitchResult(this)">Groundout</button>
+          <button class="result-btn" data-pr="FO"  onclick="selectPitchResult(this)">Flyout</button>
+          <button class="result-btn" data-pr="LO"  onclick="selectPitchResult(this)">Lineout</button>
+          <button class="result-btn" data-pr="1B"  onclick="selectPitchResult(this)">Single</button>
+          <button class="result-btn" data-pr="2B"  onclick="selectPitchResult(this)">Double</button>
+          <button class="result-btn" data-pr="3B"  onclick="selectPitchResult(this)">Triple</button>
+          <button class="result-btn" data-pr="HR"  onclick="selectPitchResult(this)">Home Run</button>
+          <button class="result-btn" data-pr="FC"  onclick="selectPitchResult(this)">Fielder's Choice</button>
+          <button class="result-btn" data-pr="E"   onclick="selectPitchResult(this)">Error</button>
+        </div>
+        <input type="hidden" id="pitchResult">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note <span style="color:var(--muted);font-size:0.85em;">(optional)</span></label>
+        <input type="text" class="form-input" id="pitchNote" placeholder="e.g. inside corner, swung late, good curve…">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('pitchModal')">Cancel</button>
+      <button class="btn-save" onclick="saveNewPitch()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW FIELDING NOTE MODAL -->
+<div class="modal-overlay" id="fieldingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Fielding Note</div>
+      <button class="modal-close" onclick="closeModal('fieldingModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Inning <span style="color:var(--muted);font-size:0.85em;">(optional)</span></label>
+        <select class="form-select" id="fieldingInning">
+          <option value="">— any —</option>
+          <option value="1">1st</option><option value="2">2nd</option><option value="3">3rd</option>
+          <option value="4">4th</option><option value="5">5th</option><option value="6">6th</option>
+          <option value="7">7th</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note</label>
+        <textarea class="form-textarea" id="fieldingNote" placeholder="e.g. Great catch in left, threw runner out at second…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('fieldingModal')">Cancel</button>
+      <button class="btn-save" onclick="saveNewFieldingNote()">Save</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
