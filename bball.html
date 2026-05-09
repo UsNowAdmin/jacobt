@@ -1242,6 +1242,7 @@ function saveNewAB() {
 }
 
 function deleteAB(gameId, abId) {
+  if (!confirm('Delete this at-bat?')) return;
   const game = db.games.find(g => g.id === gameId);
   if (!game) return;
   game.atBats = game.atBats.filter(a => a.id !== abId);
@@ -1407,6 +1408,7 @@ function saveNewPitch() {
 }
 
 function deletePitch(gameId, pitchId) {
+  if (!confirm('Delete this pitch?')) return;
   const game = db.games.find(g => g.id === gameId);
   if (!game) return;
   game.pitches = (game.pitches || []).filter(p => p.id !== pitchId);
@@ -1443,6 +1445,7 @@ function saveNewFieldingNote() {
 }
 
 function deleteFieldingNote(gameId, fId) {
+  if (!confirm('Delete this fielding note?')) return;
   const game = db.games.find(g => g.id === gameId);
   if (!game) return;
   game.fielding = (game.fielding || []).filter(f => f.id !== fId);
